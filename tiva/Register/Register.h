@@ -166,9 +166,8 @@ template <class BaseRegister, bool MightAllFieldsBeWritten,
 class WriteField0RegisterFields<BaseRegister, MightAllFieldsBeWritten,
                                 RegisterResetValue, RegisterFieldm1,
                                 RegisterFieldm1BaseField, BaseField>
-    : public WriteField0<BaseRegister, MightAllFieldsBeWritten,
-                         RegisterResetValue, RegisterFieldm1,
-                         RegisterFieldm1BaseField> {
+    : public WriteField0<BaseRegister, false, RegisterResetValue,
+                         RegisterFieldm1, RegisterFieldm1BaseField> {
   using WriteField0RegisterFieldsType =
       WriteField0RegisterFields<BaseRegister, MightAllFieldsBeWritten,
                                 RegisterResetValue, RegisterFieldm1,
@@ -180,8 +179,8 @@ class WriteField0RegisterFields<BaseRegister, MightAllFieldsBeWritten,
   friend WriteFieldsle1Type<MightAllFieldsBeWritten>;
   friend WriteFieldsle1Type<false>;
   using WriteField0Type =
-      WriteField0<BaseRegister, MightAllFieldsBeWritten, RegisterResetValue,
-                  RegisterFieldm1, RegisterFieldm1BaseField>;
+      WriteField0<BaseRegister, false, RegisterResetValue, RegisterFieldm1,
+                  RegisterFieldm1BaseField>;
 
 protected:
   using WriteField0Type::getInverseMask;
@@ -287,9 +286,8 @@ template <class BaseRegister, bool MightAllFieldsBeWritten,
 class WriteFieldslege1RegisterFields<BaseRegister, MightAllFieldsBeWritten,
                                      RegisterResetValue, WriteFieldslem1,
                                      WriteFieldslem1BaseField, BaseField>
-    : public WriteFieldslege1<BaseRegister, MightAllFieldsBeWritten,
-                              RegisterResetValue, WriteFieldslem1,
-                              WriteFieldslem1BaseField> {
+    : public WriteFieldslege1<BaseRegister, false, RegisterResetValue,
+                              WriteFieldslem1, WriteFieldslem1BaseField> {
   using WriteFieldslege1RegisterFieldsType =
       WriteFieldslege1RegisterFields<BaseRegister, MightAllFieldsBeWritten,
                                      RegisterResetValue, WriteFieldslem1,
@@ -301,9 +299,8 @@ class WriteFieldslege1RegisterFields<BaseRegister, MightAllFieldsBeWritten,
   friend WriteFieldslep1Type<MightAllFieldsBeWritten>;
   friend WriteFieldslep1Type<false>;
   using WriteFieldslege1Type =
-      WriteFieldslege1<BaseRegister, MightAllFieldsBeWritten,
-                       RegisterResetValue, WriteFieldslem1,
-                       WriteFieldslem1BaseField>;
+      WriteFieldslege1<BaseRegister, false, RegisterResetValue,
+                       WriteFieldslem1, WriteFieldslem1BaseField>;
 
 protected:
   using WriteFieldslege1Type::getInverseMask;
