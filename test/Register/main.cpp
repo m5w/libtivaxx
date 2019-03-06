@@ -22,54 +22,300 @@
 #include <tiva/Register/Register.h>
 
 class Nibble0Field : public tiva::Field<std::uint32_t, 0x00, 0x03> {
-  using BasicField = tiva::Field<std::uint32_t, 0x00, 0x03>;
+  using FieldType = tiva::Field<std::uint32_t, 0x00, 0x03>;
 
 public:
-  constexpr Nibble0Field(const std::uint32_t Value) : BasicField(Value) {}
+  constexpr Nibble0Field(const std::uint32_t Value) : FieldType(Value) {}
 };
 
 class Nibble1Field : public tiva::Field<std::uint32_t, 0x04, 0x07> {
-  using BasicField = tiva::Field<std::uint32_t, 0x04, 0x07>;
+  using FieldType = tiva::Field<std::uint32_t, 0x04, 0x07>;
 
 public:
-  constexpr Nibble1Field(const std::uint32_t Value) : BasicField(Value) {}
+  constexpr Nibble1Field(const std::uint32_t Value) : FieldType(Value) {}
 };
 
 class Nibble2Field : public tiva::Field<std::uint32_t, 0x08, 0x0b> {
-  using BasicField = tiva::Field<std::uint32_t, 0x08, 0x0b>;
+  using FieldType = tiva::Field<std::uint32_t, 0x08, 0x0b>;
 
 public:
-  constexpr Nibble2Field(const std::uint32_t Value) : BasicField(Value) {}
+  constexpr Nibble2Field(const std::uint32_t Value) : FieldType(Value) {}
 };
 
 class Nibble3Field : public tiva::Field<std::uint32_t, 0x0c, 0x0f> {
-  using BasicField = tiva::Field<std::uint32_t, 0x0c, 0x0f>;
+  using FieldType = tiva::Field<std::uint32_t, 0x0c, 0x0f>;
 
 public:
-  constexpr Nibble3Field(const std::uint32_t Value) : BasicField(Value) {}
+  constexpr Nibble3Field(const std::uint32_t Value) : FieldType(Value) {}
 };
 
 class Nibble4Field : public tiva::Field<std::uint32_t, 0x10, 0x13> {
-  using BasicField = tiva::Field<std::uint32_t, 0x10, 0x13>;
+  using FieldType = tiva::Field<std::uint32_t, 0x10, 0x13>;
 
 public:
-  constexpr Nibble4Field(const std::uint32_t Value) : BasicField(Value) {}
+  constexpr Nibble4Field(const std::uint32_t Value) : FieldType(Value) {}
 };
 
-extern std::uint32_t A;
+extern volatile std::uint32_t A;
 
 extern "C" void main() {
-  constexpr tiva::MemorymappedRegister<std::uint32_t> BasicRegister0(
+  constexpr tiva::MemorymappedRegister<std::uint32_t> BaseRegister(
       reinterpret_cast<std::uint32_t>(&A));
-  tiva::Register<decltype(BasicRegister0), 0x00'00'00'00u, Nibble0Field,
+  tiva::Register<decltype(BaseRegister), 0x00'00'00'00u, Nibble0Field>
+      Register0(BaseRegister);
+  tiva::Register<decltype(BaseRegister), 0x00'00'00'00u, Nibble0Field,
+                 Nibble1Field>
+      Register1(BaseRegister);
+  tiva::Register<decltype(BaseRegister), 0x00'00'00'00u, Nibble0Field,
+                 Nibble1Field, Nibble2Field>
+      Register2(BaseRegister);
+  tiva::Register<decltype(BaseRegister), 0x00'00'00'00u, Nibble0Field,
+                 Nibble1Field, Nibble2Field, Nibble3Field>
+      Register3(BaseRegister);
+  tiva::Register<decltype(BaseRegister), 0x00'00'00'00u, Nibble0Field,
                  Nibble1Field, Nibble2Field, Nibble3Field, Nibble4Field>
-      Register0(BasicRegister0);
+      Register4(BaseRegister);
 
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-  volatile auto B{A};
-#pragma GCC diagnostic pop
+  // # 1-Field Register
 
-  // # Paths
+  // ## 1-Field Paths
+  // * 0
+  //
+  // **Total**: 1 path
+  //
+  // 1 choose 1 = 1! / (1! * 0!) = 1 path
+
+  // 0
+  A = 0xff'ff'ff'ffu;
+  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>()).write();
+
+  // # 2-Field Register
+
+  // ## 1-Field Paths
+  // * 0
+  // * 1
+  //
+  // **Total**: 2 paths
+  //
+  // 2 choose 1 = 2! / (1! * 1!) = 2 paths
+
+  // 0
+  A = 0xff'ff'ff'ffu;
+  Register1.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>()).write();
+
+  // 1
+  A = 0xff'ff'ff'ffu;
+  Register1.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>()).write();
+
+  // ## 2-Field Paths
+  // * 0-1
+  //
+  // **Total**: 1 path
+  //
+  // 2 choose 2 = 2! / (2! * 0!) = 1 path
+
+  // 0-1
+  A = 0xff'ff'ff'ffu;
+  Register1.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write();
+
+  // # 3-Field Register
+
+  // ## 1-Field Paths
+  // * 0
+  // * 1
+  // * 2
+  //
+  // **Total**: 3 paths
+  //
+  // 3 choose 1 = 3! / (1! * 2!) = 3 paths
+
+  // 0
+  A = 0xff'ff'ff'ffu;
+  Register2.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>()).write();
+
+  // 1
+  A = 0xff'ff'ff'ffu;
+  Register2.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>()).write();
+
+  // 2
+  A = 0xff'ff'ff'ffu;
+  Register2.write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>()).write();
+
+  // ## 2-Field Paths
+  // * 0-1
+  // * 0-2
+  // * 1-2
+  //
+  // **Total**: 3 paths
+  //
+  // 3 choose 2 = 3! / (2! * 1!) = 3 paths
+
+  // 0-1
+  A = 0xff'ff'ff'ffu;
+  Register2.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write();
+
+  // 0-2
+  A = 0xff'ff'ff'ffu;
+  Register2.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write();
+
+  // 1-2
+  A = 0xff'ff'ff'ffu;
+  Register2.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write();
+
+  // ## 3-Field Paths
+  // * 0-1-2
+  //
+  // **Total**: 1 path
+  //
+  // 3 choose 3 = 3! / (3! * 0!) = 1 path
+
+  // 0-1-2
+  A = 0xff'ff'ff'ffu;
+  Register2.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write();
+
+  // # 4-Field Register
+
+  // ## 1-Field Paths
+  // * 0
+  // * 1
+  // * 2
+  // * 3
+  //
+  // **Total**: 4 paths
+  //
+  // 4 choose 1 = 4! / (1! * 3!) = 4 paths
+
+  // 0
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>()).write();
+
+  // 1
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>()).write();
+
+  // 2
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>()).write();
+
+  // 3
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>()).write();
+
+  // ## 2-Field Paths
+  // * 0-1
+  // * 0-2
+  // * 0-3
+  // * 1-2
+  // * 1-3
+  // * 2-3
+  //
+  // **Total**: 6 paths
+  //
+  // 4 choose 2 = 4! / (2! * 2!) = 6 paths
+
+  // 0-1
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write();
+
+  // 0-2
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write();
+
+  // 0-3
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write();
+
+  // 1-2
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write();
+
+  // 1-3
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write();
+
+  // 2-3
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write();
+
+  // ## 3-Field Paths
+  // * 0-1-2
+  // * 0-1-3
+  // * 0-2-3
+  // * 1-2-3
+  //
+  // **Total**: 4 paths
+  //
+  // 4 choose 3 = 4! / (3! * 1!) = 4 paths
+
+  // 0-1-2
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write();
+
+  // 0-1-3
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write();
+
+  // 0-2-3
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write();
+
+  // 1-2-3
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write();
+
+  // ## 4-Field Paths
+  // * 0-1-2-3
+  //
+  // **Total**: 1 path
+  //
+  // 4 choose 4 = 4! / (4! * 0!) = 1 path
+
+  // 0-1-2-3
+  A = 0xff'ff'ff'ffu;
+  Register3.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write();
+
+  // # 5-Field Register
+
+  // ## 1-Field Paths
   // * 0
   // * 1
   // * 2
@@ -81,36 +327,26 @@ extern "C" void main() {
   // 5 choose 1 = 5! / (1! * 4!) = 5
 
   // 0
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>()).write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>()).write();
-  B = A;
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>()).write();
 
   // 1
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>()).write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>()).write();
-  B = A;
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>()).write();
 
   // 2
-  Register0.write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>()).write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>()).write();
-  B = A;
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>()).write();
 
   // 3
-  Register0.write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>()).write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>()).write();
-  B = A;
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>()).write();
 
   // 4
-  Register0.write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>()).write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>()).write();
-  B = A;
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>()).write();
 
-  // # Paths
+  // ## 2-Field Paths
   // * 0-1
   // * 0-2
   // * 0-3
@@ -127,106 +363,66 @@ extern "C" void main() {
   // 5 choose 2 = 5! / (2! * 3!) = 10 paths
 
   // 0-1
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write();
-  B = A;
 
   // 0-2
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write();
-  B = A;
 
   // 0-3
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write();
-  B = A;
 
   // 0-4
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
   // 1-2
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write();
-  B = A;
 
   // 1-3
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write();
-  B = A;
 
   // 1-4
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
   // 2-3
-  Register0.write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write();
-  B = A;
 
   // 2-4
-  Register0.write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
   // 3-4
-  Register0.write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
-  // # Paths
+  // ## 3-Field Paths
   // * 0-1-2
   // * 0-1-3
   // * 0-1-4
@@ -243,126 +439,76 @@ extern "C" void main() {
   // 5 choose 3 = 5! / (3! * 2!) = 10 paths
 
   // 0-1-2
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write();
-  B = A;
 
   // 0-1-3
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write();
-  B = A;
 
   // 0-1-4
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
   // 0-2-3
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write();
-  B = A;
 
   // 0-2-4
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
   // 0-3-4
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
   // 1-2-3
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write();
-  B = A;
 
   // 1-2-4
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
   // 1-3-4
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
   // 2-3-4
-  Register0.write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
-  // # Paths
+  // ## 4-Field Paths
   // * 0-1-2-3
   // * 0-1-2-4
   // * 0-1-3-4
@@ -374,76 +520,46 @@ extern "C" void main() {
   // 5 choose 4 = 5! / (4! * 1!) = 5 paths
 
   // * 0-1-2-3
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write();
-  B = A;
 
   // * 0-1-2-4
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
   // * 0-1-3-4
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
   // * 0-2-3-4
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
   // * 1-2-3-4
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
-  // # Paths
+  // ## 5-Field Paths
   // * 0-1-2-3-4
   //
   // **Total**: 1 path
@@ -451,23 +567,16 @@ extern "C" void main() {
   // 5 choose 5 = 5! / (5! * 0!) = 1 path
 
   // 0-1-2-3-4
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'02u>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'20u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'02'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'20'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'02'00'00u>())
+  A = 0xff'ff'ff'ffu;
+  Register4.write(tiva::makeField<Nibble0Field, 0x00'00'00'01u>())
+      .write(tiva::makeField<Nibble1Field, 0x00'00'00'10u>())
+      .write(tiva::makeField<Nibble2Field, 0x00'00'01'00u>())
+      .write(tiva::makeField<Nibble3Field, 0x00'00'10'00u>())
+      .write(tiva::makeField<Nibble4Field, 0x00'01'00'00u>())
       .write();
-  B = A;
-  Register0.write(tiva::makeField<Nibble0Field, 0x00'00'00'0fu>())
-      .write(tiva::makeField<Nibble1Field, 0x00'00'00'f0u>())
-      .write(tiva::makeField<Nibble2Field, 0x00'00'0f'00u>())
-      .write(tiva::makeField<Nibble3Field, 0x00'00'f0'00u>())
-      .write(tiva::makeField<Nibble4Field, 0x00'0f'00'00u>())
-      .write();
-  B = A;
 
   for (;;)
     ;
 }
 
-std::uint32_t A{0xff'ff'ff'ffu};
+volatile std::uint32_t A{0x00'00'00'00u};
