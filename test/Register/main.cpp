@@ -26,6 +26,8 @@ namespace NibbleField {
 
 class IsValueValid {
 public:
+  constexpr IsValueValid() = default;
+
   constexpr bool operator()(const std::uint32_t FieldValue) const {
     return true;
   }
