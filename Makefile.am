@@ -35,6 +35,7 @@ libtiva___a_includedir = $(includedir)
 nobase_libtiva___a_include_HEADERS = \
 	tiva/Field/BaseField.h \
 	tiva/Field/Field.h \
+	tiva/Field/FieldField.h \
 	tiva/Register/MemorymappedRegister.h \
 	tiva/Register/Register.h \
 	tiva/Register/RegisterField.h \

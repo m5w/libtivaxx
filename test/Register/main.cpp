@@ -18,6 +18,7 @@
 #include <cstdint>
 
 #include <tiva/Field/Field.h>
+#include <tiva/Field/FieldField.h>
 #include <tiva/Register/MemorymappedRegister.h>
 #include <tiva/Register/Register.h>
 #include <tiva/Register/RegisterField.h>

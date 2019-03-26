@@ -80,38 +80,6 @@ public:
   }
 };
 
-template <class FieldFieldFieldType, class FieldFieldIsValueValid>
-class FieldField : public BaseField<typename FieldFieldFieldType::ValueType> {
-public:
-  using ValueType = typename FieldFieldFieldType::ValueType;
-
-private:
-  using BaseFieldType = BaseField<ValueType>;
-
-  constexpr explicit FieldField(const FieldFieldFieldType FieldFieldField)
-      : BaseFieldType(FieldFieldField) {}
-
-public:
-  static constexpr auto getMask() { return FieldFieldFieldType::getMask(); }
-
-  static constexpr bool isValueValid(const ValueType FieldFieldFieldValue) {
-    constexpr FieldFieldIsValueValid IsValueValid;
-    return FieldFieldFieldType::isValueValid(FieldFieldFieldValue) &&
-           IsValueValid(FieldFieldFieldValue);
-  }
-
-  template <ValueType FieldFieldFieldValue>
-  static constexpr FieldField make() {
-    static_assert(isValueValid(FieldFieldFieldValue));
-    return FieldField(
-        FieldFieldFieldType::template make<FieldFieldFieldValue>());
-  }
-
-  static FieldField UNSAFE_make(const FieldFieldFieldType FieldFieldField) {
-    return FieldField(FieldFieldField);
-  }
-};
-
 } // namespace tiva
 
 #endif // TIVA_FIELD_FIELD_H
