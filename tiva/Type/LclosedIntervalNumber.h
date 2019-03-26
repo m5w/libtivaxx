@@ -20,27 +20,57 @@
 
 namespace tiva {
 
-template <class Number, Number IntervalLEndpoint, Number IntervalREndpoint>
+template <class IntervalNumberType, IntervalNumberType IntervalLEndpoint,
+          IntervalNumberType IntervalREndpoint>
 class LclosedIntervalNumber {
-  Number Value;
+  static_assert(IntervalLEndpoint < IntervalREndpoint);
+  friend LclosedIntervalNumber<IntervalNumberType, IntervalLEndpoint + 1,
+                               IntervalREndpoint>;
+  friend LclosedIntervalNumber<IntervalNumberType, IntervalLEndpoint,
+                               IntervalREndpoint - 1>;
 
-  constexpr explicit LclosedIntervalNumber(
-      const Number LclosedIntervalNumberValue)
-      : Value(LclosedIntervalNumberValue) {}
+public:
+  using ValueType = IntervalNumberType;
 
-  static constexpr bool isValueValid(const Number LclosedIntervalNumberValue) {
-    return (LclosedIntervalNumberValue >= IntervalLEndpoint) &&
-           (LclosedIntervalNumberValue < IntervalREndpoint);
+private:
+  ValueType V;
+
+  constexpr explicit LclosedIntervalNumber(const ValueType NumberValue)
+      : V(NumberValue) {}
+
+  static constexpr bool isValueValid(const ValueType NumberValue) {
+    return (NumberValue >= IntervalLEndpoint) &&
+           (NumberValue < IntervalREndpoint);
   }
 
 public:
-  template <Number LclosedIntervalNumberValue>
+  template <ValueType NumberValue>
   static constexpr LclosedIntervalNumber make() {
-    static_assert(isValueValid(LclosedIntervalNumberValue));
-    return LclosedIntervalNumber(LclosedIntervalNumberValue);
+    static_assert(isValueValid(NumberValue));
+    return LclosedIntervalNumber(NumberValue);
   }
 
-  constexpr operator Number() const { return this->Value; }
+  constexpr operator ValueType() const { return this->V; }
+
+private:
+  using IntervalLEndpoingm1Type =
+      LclosedIntervalNumber<IntervalNumberType, IntervalLEndpoint - 1,
+                            IntervalREndpoint>;
+
+public:
+  constexpr operator IntervalLEndpoingm1Type() const {
+    return IntervalLEndpoingm1Type(this->V);
+  }
+
+private:
+  using IntervalREndpointp1Type =
+      LclosedIntervalNumber<IntervalNumberType, IntervalLEndpoint,
+                            IntervalREndpoint + 1>;
+
+public:
+  constexpr operator IntervalREndpointp1Type() const {
+    return IntervalREndpointp1Type(this->V);
+  }
 };
 
 } // namespace tiva

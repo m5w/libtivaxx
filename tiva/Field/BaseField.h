@@ -20,14 +20,14 @@
 
 namespace tiva {
 
-template <class Value> class BaseField {
-  Value V;
+template <class ValueType> class BaseField {
+  ValueType V;
 
 protected:
-  constexpr explicit BaseField(const Value FieldValue) : V(FieldValue) {}
+  constexpr explicit BaseField(const ValueType FieldValue) : V(FieldValue) {}
 
 public:
-  constexpr operator Value() const { return this->V; }
+  constexpr operator ValueType() const { return this->V; }
 };
 
 } // namespace tiva

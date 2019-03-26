@@ -20,50 +20,69 @@
 
 #include <limits>
 
-#include "tiva/Field/BitNumber.h"
 #include "tiva/Field/Field.h"
+#include "tiva/Type/LclosedIntervalNumber.h"
 
 namespace tiva {
 
-template <class Value>
-constexpr Value getNumbermsignificantBits(
-    const decltype(std::numeric_limits<Value>::digits) Number) {
-  if (Number == 0)
+template <class ValueType>
+constexpr ValueType
+getMsignificantBits(const LclosedIntervalNumber<
+                    decltype(std::numeric_limits<ValueType>::digits), 0,
+                    std::numeric_limits<ValueType>::digits + 1>
+                        MsignificantBitsCount) {
+  if (MsignificantBitsCount == 0)
     return 0;
 
-  return getNumberlsignificantBits<Value>(Number)
-         << (std::numeric_limits<Value>::digits - Number);
+  return getLsignificantBits<ValueType>(MsignificantBitsCount)
+         << (std::numeric_limits<ValueType>::digits - MsignificantBitsCount);
 }
 
-template <class FieldType,
-          typename BitNumber<typename FieldType::FieldValueType>::
-              BitNumberValueType LsbNumberValue>
-class RegisterField {
-  using FieldTypeValue = typename FieldType::FieldValueType;
-  static constexpr auto LsbNumber{
-      BitNumber<FieldTypeValue>::template make<LsbNumberValue>()};
-  static_assert((FieldType::getMask() &
-                 getNumbermsignificantBits<FieldTypeValue>(LsbNumber)) == 0);
-  static constexpr auto Mask{FieldType::getMask() << LsbNumber};
-  FieldTypeValue Value;
+namespace {
 
-  constexpr explicit RegisterField(const FieldType F)
-      : Value(F << LsbNumber) {}
+template <class RegisterValueType>
+using RegisterBitNumber =
+    LclosedIntervalNumber<decltype(
+                              std::numeric_limits<RegisterValueType>::digits),
+                          0, std::numeric_limits<RegisterValueType>::digits>;
+
+} // namespace
+
+template <class FieldType,
+          typename RegisterBitNumber<typename FieldType::ValueType>::ValueType
+              RegisterFieldLsignificantRegisterBitNumberValue>
+class RegisterField {
+public:
+  using FieldValueType = typename FieldType::ValueType;
+
+private:
+  using ValueType = FieldValueType;
+  static constexpr auto LsignificantRegisterBitNumber{
+      RegisterBitNumber<ValueType>::template make<
+          RegisterFieldLsignificantRegisterBitNumberValue>()};
+  static_assert(
+      (FieldType::getMask() &
+       getMsignificantBits<ValueType>(LsignificantRegisterBitNumber)) == 0);
+  static constexpr auto Mask{FieldType::getMask()
+                             << LsignificantRegisterBitNumber};
+  ValueType V;
+
+  constexpr explicit RegisterField(const FieldType RegisterFieldField)
+      : V(RegisterFieldField << LsignificantRegisterBitNumber) {}
 
 public:
   static constexpr auto getMask() { return Mask; }
 
-  template <FieldTypeValue FieldValue> static constexpr RegisterField make() {
-    return RegisterField(FieldType::template make<FieldValue>());
+  template <FieldValueType RegisterFieldFieldValue>
+  static constexpr RegisterField make() {
+    return RegisterField(FieldType::template make<RegisterFieldFieldValue>());
   }
 
-  static RegisterField UNSAFE_make(const FieldType F) {
-    return RegisterField(F);
+  static RegisterField UNSAFE_make(const FieldType RegisterFieldField) {
+    return RegisterField(RegisterFieldField);
   }
 
-  constexpr operator FieldTypeValue() const { return this->Value; }
-
-  using FieldValueType = FieldTypeValue;
+  constexpr operator ValueType() const { return this->V; }
 };
 
 } // namespace tiva

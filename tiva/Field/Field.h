@@ -21,49 +21,63 @@
 #include <limits>
 
 #include "tiva/Field/BaseField.h"
-#include "tiva/Field/BitNumber.h"
-#include "tiva/Field/FieldWidth.h"
+#include "tiva/Type/LclosedIntervalNumber.h"
 
 namespace tiva {
 
-template <class Value>
-constexpr Value getNumberlsignificantBits(
-    const decltype(std::numeric_limits<Value>::digits) Number) {
-  if (Number == 0)
+template <class ValueType>
+constexpr ValueType
+getLsignificantBits(const LclosedIntervalNumber<
+                    decltype(std::numeric_limits<ValueType>::digits), 0,
+                    std::numeric_limits<ValueType>::digits + 1>
+                        LsignificantBitsCount) {
+  if (LsignificantBitsCount == 0)
     return 0;
 
-  return std::numeric_limits<Value>::max() >>
-         (std::numeric_limits<Value>::digits - Number);
+  return std::numeric_limits<ValueType>::max() >>
+         (std::numeric_limits<ValueType>::digits - LsignificantBitsCount);
 }
 
-template <class Value,
-          typename FieldWidth<Value>::FieldWidthValueType FieldWidthValue>
-class Field : public BaseField<Value> {
-  static constexpr auto FW{
-      FieldWidth<Value>::template make<FieldWidthValue>()};
-  static constexpr auto Mask{getNumberlsignificantBits<Value>(FW)};
-  using BaseFieldType = BaseField<Value>;
+namespace {
 
-  constexpr explicit Field(const Value FieldValue)
+template <class FieldValueType>
+using FieldSize =
+    LclosedIntervalNumber<decltype(
+                              std::numeric_limits<FieldValueType>::digits),
+                          1, std::numeric_limits<FieldValueType>::digits + 1>;
+
+} // namespace
+
+template <class FieldValueType,
+          typename FieldSize<FieldValueType>::ValueType FieldSizeValue>
+class Field : public BaseField<FieldValueType> {
+public:
+  using ValueType = FieldValueType;
+
+private:
+  static constexpr auto Size{
+      FieldSize<ValueType>::template make<FieldSizeValue>()};
+  static constexpr auto Mask{getLsignificantBits<ValueType>(Size)};
+  using BaseFieldType = BaseField<ValueType>;
+
+  constexpr explicit Field(const ValueType FieldValue)
       : BaseFieldType(FieldValue) {}
 
 public:
   static constexpr auto getMask() { return Mask; }
 
-  static constexpr bool isValueValid(const Value FieldValue) {
+  static constexpr bool isValueValid(const ValueType FieldValue) {
     return (FieldValue & Mask) == FieldValue;
   }
 
-  template <Value FieldValue> static constexpr Field make() {
+  template <ValueType FieldValue> static constexpr Field make() {
     static_assert(isValueValid(FieldValue));
     return Field(FieldValue);
   }
 
-  static Field UNSAFE_make(const Value FieldValue) {
+  static Field UNSAFE_make(const ValueType FieldValue) {
     return Field(FieldValue);
   }
-
-  using FieldValueType = Value;
 };
 
 } // namespace tiva
