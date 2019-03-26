@@ -48,12 +48,13 @@ using RegisterBitNumber =
 
 } // namespace
 
-template <class FieldType,
-          typename RegisterBitNumber<typename FieldType::ValueType>::ValueType
+template <class RegisterFieldFieldType,
+          typename RegisterBitNumber<
+              typename RegisterFieldFieldType::ValueType>::ValueType
               RegisterFieldLsignificantRegisterBitNumberValue>
 class RegisterField {
 public:
-  using FieldValueType = typename FieldType::ValueType;
+  using FieldValueType = typename RegisterFieldFieldType::ValueType;
 
 private:
   using ValueType = FieldValueType;
@@ -61,13 +62,14 @@ private:
       RegisterBitNumber<ValueType>::template make<
           RegisterFieldLsignificantRegisterBitNumberValue>()};
   static_assert(
-      (FieldType::getMask() &
+      (RegisterFieldFieldType::getMask() &
        getMsignificantBits<ValueType>(LsignificantRegisterBitNumber)) == 0);
-  static constexpr auto Mask{FieldType::getMask()
+  static constexpr auto Mask{RegisterFieldFieldType::getMask()
                              << LsignificantRegisterBitNumber};
   ValueType V;
 
-  constexpr explicit RegisterField(const FieldType RegisterFieldField)
+  constexpr explicit RegisterField(
+      const RegisterFieldFieldType RegisterFieldField)
       : V(RegisterFieldField << LsignificantRegisterBitNumber) {}
 
 public:
@@ -75,10 +77,12 @@ public:
 
   template <FieldValueType RegisterFieldFieldValue>
   static constexpr RegisterField make() {
-    return RegisterField(FieldType::template make<RegisterFieldFieldValue>());
+    return RegisterField(
+        RegisterFieldFieldType::template make<RegisterFieldFieldValue>());
   }
 
-  static RegisterField UNSAFE_make(const FieldType RegisterFieldField) {
+  static RegisterField
+  UNSAFE_make(const RegisterFieldFieldType RegisterFieldField) {
     return RegisterField(RegisterFieldField);
   }
 

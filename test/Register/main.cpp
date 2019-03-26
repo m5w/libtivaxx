@@ -22,39 +22,25 @@
 #include <tiva/Register/Register.h>
 #include <tiva/Register/RegisterField.h>
 
-class NibbleField : public tiva::BaseField<std::uint32_t> {
+namespace NibbleField {
+
+class IsValueValid {
 public:
-  using ValueType = std::uint32_t;
-
-private:
-  using BaseFieldType = BaseField<ValueType>;
-  using FieldType = tiva::Field<ValueType, 0x04>;
-
-  constexpr explicit NibbleField(const FieldType FieldField)
-      : BaseFieldType(FieldField) {}
-
-public:
-  static constexpr auto getMask() { return FieldType::getMask(); }
-
-  static constexpr bool isValueValid(const ValueType FieldFieldValue) {
-    return FieldType::isValueValid(FieldFieldValue);
-  }
-
-  template <std::uint32_t FieldFieldValue>
-  static constexpr NibbleField make() {
-    return NibbleField(FieldType::template make<FieldFieldValue>());
-  }
-
-  static NibbleField UNSAFE_make(const FieldType FieldField) {
-    return NibbleField(FieldField);
+  constexpr bool operator()(const std::uint32_t FieldValue) const {
+    return true;
   }
 };
 
-using Nibble0Field = tiva::RegisterField<NibbleField, 0x00>;
-using Nibble1Field = tiva::RegisterField<NibbleField, 0x04>;
-using Nibble2Field = tiva::RegisterField<NibbleField, 0x08>;
-using Nibble3Field = tiva::RegisterField<NibbleField, 0x0c>;
-using Nibble4Field = tiva::RegisterField<NibbleField, 0x10>;
+using FieldType =
+    tiva::FieldField<tiva::Field<std::uint32_t, 0x04>, IsValueValid>;
+
+} // namespace NibbleField
+
+using Nibble0Field = tiva::RegisterField<NibbleField::FieldType, 0x00>;
+using Nibble1Field = tiva::RegisterField<NibbleField::FieldType, 0x04>;
+using Nibble2Field = tiva::RegisterField<NibbleField::FieldType, 0x08>;
+using Nibble3Field = tiva::RegisterField<NibbleField::FieldType, 0x0c>;
+using Nibble4Field = tiva::RegisterField<NibbleField::FieldType, 0x10>;
 
 extern volatile std::uint32_t A;
 
