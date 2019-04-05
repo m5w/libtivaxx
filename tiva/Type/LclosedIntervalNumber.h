@@ -53,13 +53,13 @@ public:
   constexpr operator ValueType() const { return this->V; }
 
 private:
-  using IntervalLEndpoingm1Type =
+  using IntervalLEndpointm1Type =
       LclosedIntervalNumber<IntervalNumberType, IntervalLEndpoint - 1,
                             IntervalREndpoint>;
 
 public:
-  constexpr operator IntervalLEndpoingm1Type() const {
-    return IntervalLEndpoingm1Type(this->V);
+  constexpr operator IntervalLEndpointm1Type() const {
+    return IntervalLEndpointm1Type(this->V);
   }
 
 private:
