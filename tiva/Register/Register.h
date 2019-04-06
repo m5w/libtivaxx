@@ -22,163 +22,204 @@ namespace tiva {
 
 namespace {
 
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue, class FieldType,
-          class... FieldTypesgep1>
+template <class WriteRegisterFieldsRegisterType,
+          bool WriteRegisterFieldsMightAllFieldsBeWritten,
+          typename WriteRegisterFieldsRegisterType::ValueType
+              WriteRegisterFieldsRegisterResetValue,
+          class WriteRegisterFieldsFieldType,
+          class... WriteRegisterFieldsFieldTypesgep1Types>
 class WriteRegisterFields;
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue,
-          class WriteFields>
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteType>
 class Write;
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue,
-          class RegisterFieldm1, class RegisterFieldm1FieldType>
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteRegisterFieldsm1Type,
+          class WriteWriteRegisterFieldsm1FieldType>
 class WriteField0;
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue,
-          class RegisterFieldm1, class RegisterFieldm1FieldType,
-          class FieldType, class... FieldTypesgep1>
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteRegisterFieldsm1Type,
+          class WriteWriteRegisterFieldsm1FieldType, class WriteFieldType,
+          class... WriteFieldsgep1Types>
 class WriteField0RegisterFields;
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue,
-          class WriteFieldslem1, class WriteFieldslem1FieldType>
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteFieldslem1RegisterFieldsType,
+          class WriteWriteFieldslem1RegisterFieldsFieldType>
 class WriteFieldslege1;
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue,
-          class WriteFieldslem1, class WriteFieldslem1FieldType,
-          class FieldType, class... FieldTypesgep1>
+template <class RegisterType, bool WriteMightAllFieldsBeWritten,
+          typename RegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteFieldslem1RegisterFieldsType,
+          class WriteWriteFieldslem1RegisterFieldsFieldType,
+          class WriteFieldType, class... WriteFieldsgep1Types>
 class WriteFieldslege1RegisterFields;
 
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue, class FieldType>
-class WriteRegisterFields<BaseRegister, MightAllFieldsBeWritten,
-                          RegisterResetValue, FieldType> {
+template <class WriteRegisterFieldsRegisterType,
+          bool WriteRegisterFieldsMightAllFieldsBeWritten,
+          typename WriteRegisterFieldsRegisterType::ValueType
+              WriteRegisterFieldsRegisterResetValue,
+          class WriteRegisterFieldsFieldType>
+class WriteRegisterFields<WriteRegisterFieldsRegisterType,
+                          WriteRegisterFieldsMightAllFieldsBeWritten,
+                          WriteRegisterFieldsRegisterResetValue,
+                          WriteRegisterFieldsFieldType> {
 protected:
-  const BaseRegister &BR;
+  const WriteRegisterFieldsRegisterType &R;
 
 public:
-  WriteRegisterFields(const BaseRegister &BR) : BR(BR) {}
+  WriteRegisterFields(
+      const WriteRegisterFieldsRegisterType &WriteRegisterFieldsRegister)
+      : R(WriteRegisterFieldsRegister) {}
 
 private:
   using WriteRegisterFieldsType =
-      WriteRegisterFields<BaseRegister, MightAllFieldsBeWritten,
-                          RegisterResetValue, FieldType>;
+      WriteRegisterFields<WriteRegisterFieldsRegisterType,
+                          WriteRegisterFieldsMightAllFieldsBeWritten,
+                          WriteRegisterFieldsRegisterResetValue,
+                          WriteRegisterFieldsFieldType>;
   using WriteField0Type =
-      WriteField0<BaseRegister, MightAllFieldsBeWritten, RegisterResetValue,
-                  WriteRegisterFieldsType, FieldType>;
+      WriteField0<WriteRegisterFieldsRegisterType,
+                  WriteRegisterFieldsMightAllFieldsBeWritten,
+                  WriteRegisterFieldsRegisterResetValue,
+                  WriteRegisterFieldsType, WriteRegisterFieldsFieldType>;
 
 public:
-  auto write(const FieldType F) const { return WriteField0Type(this->BR, F); }
+  auto write(const WriteRegisterFieldsFieldType F) const {
+    return WriteField0Type(this->R, F);
+  }
 };
 
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue, class FieldType,
-          class... FieldTypesgep1>
+template <class WriteRegisterFieldsRegisterType,
+          bool WriteRegisterFieldsMightAllFieldsBeWritten,
+          typename WriteRegisterFieldsRegisterType::ValueType
+              WriteRegisterFieldsRegisterResetValue,
+          class WriteRegisterFieldsFieldType,
+          class... WriteRegisterFieldsFieldTypesgep1Types>
 class WriteRegisterFields
-    : public WriteRegisterFields<BaseRegister, false, RegisterResetValue,
-                                 FieldTypesgep1...> {
+    : public WriteRegisterFields<WriteRegisterFieldsRegisterType, false,
+                                 WriteRegisterFieldsRegisterResetValue,
+                                 WriteRegisterFieldsFieldTypesgep1Types...> {
   using WriteRegisterFieldsgep1Type =
-      WriteRegisterFields<BaseRegister, false, RegisterResetValue,
-                          FieldTypesgep1...>;
+      WriteRegisterFields<WriteRegisterFieldsRegisterType, false,
+                          WriteRegisterFieldsRegisterResetValue,
+                          WriteRegisterFieldsFieldTypesgep1Types...>;
 
 public:
   using WriteRegisterFieldsgep1Type::write;
 
-  WriteRegisterFields(const BaseRegister &BR)
-      : WriteRegisterFieldsgep1Type(BR) {}
+  WriteRegisterFields(
+      const WriteRegisterFieldsRegisterType &WriteRegisterFieldsRegister)
+      : WriteRegisterFieldsgep1Type(WriteRegisterFieldsRegister) {}
 
 private:
   using WriteRegisterFieldsType =
-      WriteRegisterFields<BaseRegister, MightAllFieldsBeWritten,
-                          RegisterResetValue, FieldType, FieldTypesgep1...>;
-  using WriteField0RegisterFieldsType =
-      WriteField0RegisterFields<BaseRegister, MightAllFieldsBeWritten,
-                                RegisterResetValue, WriteRegisterFieldsType,
-                                FieldType, FieldTypesgep1...>;
+      WriteRegisterFields<WriteRegisterFieldsRegisterType,
+                          WriteRegisterFieldsMightAllFieldsBeWritten,
+                          WriteRegisterFieldsRegisterResetValue,
+                          WriteRegisterFieldsFieldType,
+                          WriteRegisterFieldsFieldTypesgep1Types...>;
+  using WriteField0RegisterFieldsType = WriteField0RegisterFields<
+      WriteRegisterFieldsRegisterType,
+      WriteRegisterFieldsMightAllFieldsBeWritten,
+      WriteRegisterFieldsRegisterResetValue, WriteRegisterFieldsType,
+      WriteRegisterFieldsFieldType, WriteRegisterFieldsFieldTypesgep1Types...>;
 
 public:
-  auto write(const FieldType F) const {
-    return WriteField0RegisterFieldsType(this->BR, F);
+  auto write(const WriteRegisterFieldsFieldType F) const {
+    return WriteField0RegisterFieldsType(this->R, F);
   }
 };
 
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue,
-          class WriteFields>
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteType>
 class Write {
 protected:
-  const BaseRegister &BR;
+  const WriteRegisterType &R;
 
 public:
-  Write(const BaseRegister &BR) : BR(BR) {}
+  Write(const WriteRegisterType &WriteRegister) : R(WriteRegister) {}
 
 private:
-  using BaseRegisterValue = typename BaseRegister::ValueType;
+  using RegisterValueType = typename WriteRegisterType::ValueType;
 
 public:
   void write() const {
-    BaseRegisterValue BRV;
+    RegisterValueType RV;
 
-    if constexpr (!MightAllFieldsBeWritten)
-      BRV = this->BR.read();
+    if constexpr (!WriteMightAllFieldsBeWritten)
+      RV = this->R.read();
     else
-      BRV = RegisterResetValue;
+      RV = WriteRegisterResetValue;
 
-    this->BR.write((BRV & WriteFields::getInverseMask()) |
-                   static_cast<const WriteFields *>(this)->getValue());
+    this->R.write((RV & WriteWriteType::getInverseMask()) |
+                  static_cast<const WriteWriteType *>(this)->getValue());
   }
 };
 
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue,
-          class RegisterFieldm1, class RegisterFieldm1FieldType>
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteRegisterFieldsm1Type,
+          class WriteWriteRegisterFieldsm1FieldType>
 class WriteField0
-    : public Write<BaseRegister, MightAllFieldsBeWritten, RegisterResetValue,
-                   WriteField0<BaseRegister, MightAllFieldsBeWritten,
-                               RegisterResetValue, RegisterFieldm1,
-                               RegisterFieldm1FieldType>> {
+    : public Write<
+          WriteRegisterType, WriteMightAllFieldsBeWritten,
+          WriteRegisterResetValue,
+          WriteField0<WriteRegisterType, WriteMightAllFieldsBeWritten,
+                      WriteRegisterResetValue, WriteWriteRegisterFieldsm1Type,
+                      WriteWriteRegisterFieldsm1FieldType>> {
   using WriteField0Type =
-      WriteField0<BaseRegister, MightAllFieldsBeWritten, RegisterResetValue,
-                  RegisterFieldm1, RegisterFieldm1FieldType>;
-  using WriteType = Write<BaseRegister, MightAllFieldsBeWritten,
-                          RegisterResetValue, WriteField0Type>;
+      WriteField0<WriteRegisterType, WriteMightAllFieldsBeWritten,
+                  WriteRegisterResetValue, WriteWriteRegisterFieldsm1Type,
+                  WriteWriteRegisterFieldsm1FieldType>;
+  using WriteType = Write<WriteRegisterType, WriteMightAllFieldsBeWritten,
+                          WriteRegisterResetValue, WriteField0Type>;
   friend WriteType;
-  static constexpr auto InverseMask{~(RegisterFieldm1FieldType::getMask())};
-  using BaseRegisterValue = typename BaseRegister::ValueType;
-  BaseRegisterValue Value;
+  static constexpr auto InverseMask{
+      ~(WriteWriteRegisterFieldsm1FieldType::getMask())};
+  using RegisterValueType = typename WriteRegisterType::ValueType;
+  RegisterValueType V;
 
 protected:
   static constexpr auto getInverseMask() { return InverseMask; }
 
-  auto getValue() const { return this->Value; }
+  auto getValue() const { return this->V; }
 
 public:
-  WriteField0(const BaseRegister &BR, const RegisterFieldm1FieldType RFm1F)
-      : WriteType(BR), Value(RFm1F) {}
+  WriteField0(const WriteRegisterType &WriteRegister,
+              const WriteWriteRegisterFieldsm1FieldType
+                  WriteWriteRegisterFieldsm1Field)
+      : WriteType(WriteRegister), V(WriteWriteRegisterFieldsm1Field) {}
 };
 
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue,
-          class RegisterFieldm1, class RegisterFieldm1FieldType,
-          class FieldType>
-class WriteField0RegisterFields<BaseRegister, MightAllFieldsBeWritten,
-                                RegisterResetValue, RegisterFieldm1,
-                                RegisterFieldm1FieldType, FieldType>
-    : public WriteField0<BaseRegister, false, RegisterResetValue,
-                         RegisterFieldm1, RegisterFieldm1FieldType> {
-  using WriteField0RegisterFieldsType =
-      WriteField0RegisterFields<BaseRegister, MightAllFieldsBeWritten,
-                                RegisterResetValue, RegisterFieldm1,
-                                RegisterFieldm1FieldType, FieldType>;
-  template <bool MAFBW>
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteRegisterFieldsm1Type,
+          class WriteWriteRegisterFieldsm1FieldType, class WriteFieldType>
+class WriteField0RegisterFields<
+    WriteRegisterType, WriteMightAllFieldsBeWritten, WriteRegisterResetValue,
+    WriteWriteRegisterFieldsm1Type, WriteWriteRegisterFieldsm1FieldType,
+    WriteFieldType>
+    : public WriteField0<WriteRegisterType, false, WriteRegisterResetValue,
+                         WriteWriteRegisterFieldsm1Type,
+                         WriteWriteRegisterFieldsm1FieldType> {
+  using WriteField0RegisterFieldsType = WriteField0RegisterFields<
+      WriteRegisterType, WriteMightAllFieldsBeWritten, WriteRegisterResetValue,
+      WriteWriteRegisterFieldsm1Type, WriteWriteRegisterFieldsm1FieldType,
+      WriteFieldType>;
+  template <bool MightAllFieldsBeWritten>
   using WriteFieldsle1Type =
-      WriteFieldslege1<BaseRegister, MAFBW, RegisterResetValue,
-                       WriteField0RegisterFieldsType, FieldType>;
-  friend WriteFieldsle1Type<MightAllFieldsBeWritten>;
+      WriteFieldslege1<WriteRegisterType, MightAllFieldsBeWritten,
+                       WriteRegisterResetValue, WriteField0RegisterFieldsType,
+                       WriteFieldType>;
+  friend WriteFieldsle1Type<WriteMightAllFieldsBeWritten>;
   friend WriteFieldsle1Type<false>;
   using WriteField0Type =
-      WriteField0<BaseRegister, false, RegisterResetValue, RegisterFieldm1,
-                  RegisterFieldm1FieldType>;
+      WriteField0<WriteRegisterType, false, WriteRegisterResetValue,
+                  WriteWriteRegisterFieldsm1Type,
+                  WriteWriteRegisterFieldsm1FieldType>;
 
 protected:
   using WriteField0Type::getInverseMask;
@@ -187,36 +228,41 @@ protected:
 public:
   using WriteField0Type::write;
 
-  WriteField0RegisterFields(const BaseRegister &BR,
-                            const RegisterFieldm1FieldType RFm1F)
-      : WriteField0Type(BR, RFm1F) {}
+  WriteField0RegisterFields(const WriteRegisterType &WriteRegister,
+                            const WriteWriteRegisterFieldsm1FieldType
+                                WriteWriteRegisterFieldsm1Field)
+      : WriteField0Type(WriteRegister, WriteWriteRegisterFieldsm1Field) {}
 
-  auto write(const FieldType F) const {
-    return WriteFieldsle1Type<MightAllFieldsBeWritten>(this->BR, *this, F);
+  auto write(const WriteFieldType F) const {
+    return WriteFieldsle1Type<WriteMightAllFieldsBeWritten>(this->R, *this, F);
   }
 };
 
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue,
-          class RegisterFieldm1, class RegisterFieldm1FieldType,
-          class FieldType, class... FieldTypesgep1>
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteRegisterFieldsm1Type,
+          class WriteWriteRegisterFieldsm1FieldType, class WriteFieldType,
+          class... WriteFieldsgep1Types>
 class WriteField0RegisterFields
     : public WriteField0RegisterFields<
-          BaseRegister, false, RegisterResetValue, RegisterFieldm1,
-          RegisterFieldm1FieldType, FieldTypesgep1...> {
+          WriteRegisterType, false, WriteRegisterResetValue,
+          WriteWriteRegisterFieldsm1Type, WriteWriteRegisterFieldsm1FieldType,
+          WriteFieldsgep1Types...> {
   using WriteField0RegisterFieldsType = WriteField0RegisterFields<
-      BaseRegister, MightAllFieldsBeWritten, RegisterResetValue,
-      RegisterFieldm1, RegisterFieldm1FieldType, FieldType, FieldTypesgep1...>;
-  template <bool MAFBW>
+      WriteRegisterType, WriteMightAllFieldsBeWritten, WriteRegisterResetValue,
+      WriteWriteRegisterFieldsm1Type, WriteWriteRegisterFieldsm1FieldType,
+      WriteFieldType, WriteFieldsgep1Types...>;
+  template <bool MightAllFieldsBeWritten>
   using WriteFieldsle1Type =
-      WriteFieldslege1<BaseRegister, MAFBW, RegisterResetValue,
-                       WriteField0RegisterFieldsType, FieldType>;
-  friend WriteFieldsle1Type<MightAllFieldsBeWritten>;
+      WriteFieldslege1<WriteRegisterType, MightAllFieldsBeWritten,
+                       WriteRegisterResetValue, WriteField0RegisterFieldsType,
+                       WriteFieldType>;
+  friend WriteFieldsle1Type<WriteMightAllFieldsBeWritten>;
   friend WriteFieldsle1Type<false>;
-  using WriteField0RegisterFieldsgep1Type =
-      WriteField0RegisterFields<BaseRegister, false, RegisterResetValue,
-                                RegisterFieldm1, RegisterFieldm1FieldType,
-                                FieldTypesgep1...>;
+  using WriteField0RegisterFieldsgep1Type = WriteField0RegisterFields<
+      WriteRegisterType, false, WriteRegisterResetValue,
+      WriteWriteRegisterFieldsm1Type, WriteWriteRegisterFieldsm1FieldType,
+      WriteFieldsgep1Types...>;
 
 protected:
   using WriteField0RegisterFieldsgep1Type::getInverseMask;
@@ -225,79 +271,99 @@ protected:
 public:
   using WriteField0RegisterFieldsgep1Type::write;
 
-  WriteField0RegisterFields(const BaseRegister &BR,
-                            const RegisterFieldm1FieldType RFm1F)
-      : WriteField0RegisterFieldsgep1Type(BR, RFm1F) {}
+  WriteField0RegisterFields(const WriteRegisterType &WriteRegister,
+                            const WriteWriteRegisterFieldsm1FieldType
+                                WriteWriteRegisterFieldsm1Field)
+      : WriteField0RegisterFieldsgep1Type(WriteRegister,
+                                          WriteWriteRegisterFieldsm1Field) {}
 
 private:
   using WriteFieldsle1RegisterFieldsType = WriteFieldslege1RegisterFields<
-      BaseRegister, MightAllFieldsBeWritten, RegisterResetValue,
-      WriteField0RegisterFieldsType, FieldType, FieldTypesgep1...>;
+      WriteRegisterType, WriteMightAllFieldsBeWritten, WriteRegisterResetValue,
+      WriteField0RegisterFieldsType, WriteFieldType, WriteFieldsgep1Types...>;
 
 public:
-  auto write(const FieldType F) const {
-    return WriteFieldsle1RegisterFieldsType(this->BR, *this, F);
+  auto write(const WriteFieldType F) const {
+    return WriteFieldsle1RegisterFieldsType(this->R, *this, F);
   }
 };
 
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue,
-          class WriteFieldslem1, class WriteFieldslem1FieldType>
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteFieldslem1RegisterFieldsType,
+          class WriteWriteFieldslem1RegisterFieldsFieldType>
 class WriteFieldslege1
-    : public Write<BaseRegister, MightAllFieldsBeWritten, RegisterResetValue,
-                   WriteFieldslege1<BaseRegister, MightAllFieldsBeWritten,
-                                    RegisterResetValue, WriteFieldslem1,
-                                    WriteFieldslem1FieldType>> {
+    : public Write<
+          WriteRegisterType, WriteMightAllFieldsBeWritten,
+          WriteRegisterResetValue,
+          WriteFieldslege1<WriteRegisterType, WriteMightAllFieldsBeWritten,
+                           WriteRegisterResetValue,
+                           WriteWriteFieldslem1RegisterFieldsType,
+                           WriteWriteFieldslem1RegisterFieldsFieldType>> {
   using WriteFieldslege1Type =
-      WriteFieldslege1<BaseRegister, MightAllFieldsBeWritten,
-                       RegisterResetValue, WriteFieldslem1,
-                       WriteFieldslem1FieldType>;
-  using WriteType = Write<BaseRegister, MightAllFieldsBeWritten,
-                          RegisterResetValue, WriteFieldslege1Type>;
+      WriteFieldslege1<WriteRegisterType, WriteMightAllFieldsBeWritten,
+                       WriteRegisterResetValue,
+                       WriteWriteFieldslem1RegisterFieldsType,
+                       WriteWriteFieldslem1RegisterFieldsFieldType>;
+  using WriteType = Write<WriteRegisterType, WriteMightAllFieldsBeWritten,
+                          WriteRegisterResetValue, WriteFieldslege1Type>;
   friend WriteType;
-  static constexpr auto InverseMask{~(WriteFieldslem1FieldType::getMask()) &
-                                    WriteFieldslem1::getInverseMask()};
+  static constexpr auto InverseMask{
+      ~(WriteWriteFieldslem1RegisterFieldsFieldType::getMask()) &
+      WriteWriteFieldslem1RegisterFieldsType::getInverseMask()};
 
 protected:
-  const WriteFieldslem1 &WFm1;
+  const WriteWriteFieldslem1RegisterFieldsType &WFslem1RFs;
 
 private:
-  using BaseRegisterValue = typename BaseRegister::ValueType;
-  BaseRegisterValue Value;
+  using RegisterValueType = typename WriteRegisterType::ValueType;
+  RegisterValueType V;
 
 protected:
   static constexpr auto getInverseMask() { return InverseMask; }
 
-  auto getValue() const { return this->Value; }
+  auto getValue() const { return this->V; }
 
 public:
-  WriteFieldslege1(const BaseRegister &BR, const WriteFieldslem1 &WFm1,
-                   const WriteFieldslem1FieldType WFm1F)
-      : WriteType(BR), WFm1(WFm1), Value(WFm1F | WFm1.getValue()) {}
+  WriteFieldslege1(const WriteRegisterType &WriteRegister,
+                   const WriteWriteFieldslem1RegisterFieldsType
+                       &WriteWriteFieldslem1RegisterFields,
+                   const WriteWriteFieldslem1RegisterFieldsFieldType
+                       WriteWriteFieldslem1RegisterFieldsField)
+      : WriteType(WriteRegister),
+        WFslem1RFs(WriteWriteFieldslem1RegisterFields),
+        V(WriteWriteFieldslem1RegisterFieldsField |
+          WriteWriteFieldslem1RegisterFields.getValue()) {}
 };
 
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue,
-          class WriteFieldslem1, class WriteFieldslem1FieldType,
-          class FieldType>
-class WriteFieldslege1RegisterFields<BaseRegister, MightAllFieldsBeWritten,
-                                     RegisterResetValue, WriteFieldslem1,
-                                     WriteFieldslem1FieldType, FieldType>
-    : public WriteFieldslege1<BaseRegister, false, RegisterResetValue,
-                              WriteFieldslem1, WriteFieldslem1FieldType> {
-  using WriteFieldslege1RegisterFieldsType =
-      WriteFieldslege1RegisterFields<BaseRegister, MightAllFieldsBeWritten,
-                                     RegisterResetValue, WriteFieldslem1,
-                                     WriteFieldslem1FieldType, FieldType>;
-  template <bool MAFBW>
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteFieldslem1RegisterFieldsType,
+          class WriteWriteFieldslem1RegisterFieldsFieldType,
+          class WriteFieldType>
+class WriteFieldslege1RegisterFields<
+    WriteRegisterType, WriteMightAllFieldsBeWritten, WriteRegisterResetValue,
+    WriteWriteFieldslem1RegisterFieldsType,
+    WriteWriteFieldslem1RegisterFieldsFieldType, WriteFieldType>
+    : public WriteFieldslege1<WriteRegisterType, false,
+                              WriteRegisterResetValue,
+                              WriteWriteFieldslem1RegisterFieldsType,
+                              WriteWriteFieldslem1RegisterFieldsFieldType> {
+  using WriteFieldslege1RegisterFieldsType = WriteFieldslege1RegisterFields<
+      WriteRegisterType, WriteMightAllFieldsBeWritten, WriteRegisterResetValue,
+      WriteWriteFieldslem1RegisterFieldsType,
+      WriteWriteFieldslem1RegisterFieldsFieldType, WriteFieldType>;
+  template <bool MightAllFieldsBeWritten>
   using WriteFieldslep1Type =
-      WriteFieldslege1<BaseRegister, MAFBW, RegisterResetValue,
-                       WriteFieldslege1RegisterFieldsType, FieldType>;
-  friend WriteFieldslep1Type<MightAllFieldsBeWritten>;
+      WriteFieldslege1<WriteRegisterType, MightAllFieldsBeWritten,
+                       WriteRegisterResetValue,
+                       WriteFieldslege1RegisterFieldsType, WriteFieldType>;
+  friend WriteFieldslep1Type<WriteMightAllFieldsBeWritten>;
   friend WriteFieldslep1Type<false>;
   using WriteFieldslege1Type =
-      WriteFieldslege1<BaseRegister, false, RegisterResetValue,
-                       WriteFieldslem1, WriteFieldslem1FieldType>;
+      WriteFieldslege1<WriteRegisterType, false, WriteRegisterResetValue,
+                       WriteWriteFieldslem1RegisterFieldsType,
+                       WriteWriteFieldslem1RegisterFieldsFieldType>;
 
 protected:
   using WriteFieldslege1Type::getInverseMask;
@@ -306,37 +372,50 @@ protected:
 public:
   using WriteFieldslege1Type::write;
 
-  WriteFieldslege1RegisterFields(const BaseRegister &BR,
-                                 const WriteFieldslem1 &WFm1,
-                                 const WriteFieldslem1FieldType WFm1F)
-      : WriteFieldslege1Type(BR, WFm1, WFm1F) {}
+  WriteFieldslege1RegisterFields(
+      const WriteRegisterType &WriteRegister,
+      const WriteWriteFieldslem1RegisterFieldsType
+          &WriteWriteFieldslem1RegisterFields,
+      const WriteWriteFieldslem1RegisterFieldsFieldType
+          WriteWriteFieldslem1RegisterFieldsField)
+      : WriteFieldslege1Type(WriteRegister, WriteWriteFieldslem1RegisterFields,
+                             WriteWriteFieldslem1RegisterFieldsField) {}
 
-  auto write(const FieldType F) const {
-    return WriteFieldslep1Type<MightAllFieldsBeWritten>(this->BR, *this, F);
+  auto write(const WriteFieldType F) const {
+    return WriteFieldslep1Type<WriteMightAllFieldsBeWritten>(this->R, *this,
+                                                             F);
   }
 };
 
-template <class BaseRegister, bool MightAllFieldsBeWritten,
-          typename BaseRegister::ValueType RegisterResetValue,
-          class WriteFieldslem1, class WriteFieldslem1FieldType,
-          class FieldType, class... FieldTypesgep1>
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteFieldslem1RegisterFieldsType,
+          class WriteWriteFieldslem1RegisterFieldsFieldType,
+          class WriteFieldType, class... WriteFieldsgep1Types>
 class WriteFieldslege1RegisterFields
     : public WriteFieldslege1RegisterFields<
-          BaseRegister, false, RegisterResetValue, WriteFieldslem1,
-          WriteFieldslem1FieldType, FieldTypesgep1...> {
+          WriteRegisterType, false, WriteRegisterResetValue,
+          WriteWriteFieldslem1RegisterFieldsType,
+          WriteWriteFieldslem1RegisterFieldsFieldType,
+          WriteFieldsgep1Types...> {
   using WriteFieldslege1RegisterFieldsType = WriteFieldslege1RegisterFields<
-      BaseRegister, MightAllFieldsBeWritten, RegisterResetValue,
-      WriteFieldslem1, WriteFieldslem1FieldType, FieldType, FieldTypesgep1...>;
-  template <bool MAFBW>
+      WriteRegisterType, WriteMightAllFieldsBeWritten, WriteRegisterResetValue,
+      WriteWriteFieldslem1RegisterFieldsType,
+      WriteWriteFieldslem1RegisterFieldsFieldType, WriteFieldType,
+      WriteFieldsgep1Types...>;
+  template <bool MightAllFieldsBeWritten>
   using WriteFieldslep1Type =
-      WriteFieldslege1<BaseRegister, MAFBW, RegisterResetValue,
-                       WriteFieldslege1RegisterFieldsType, FieldType>;
-  friend WriteFieldslep1Type<MightAllFieldsBeWritten>;
+      WriteFieldslege1<WriteRegisterType, MightAllFieldsBeWritten,
+                       WriteRegisterResetValue,
+                       WriteFieldslege1RegisterFieldsType, WriteFieldType>;
+  friend WriteFieldslep1Type<WriteMightAllFieldsBeWritten>;
   friend WriteFieldslep1Type<false>;
   using WriteFieldslege1RegisterFieldsgep1Type =
-      WriteFieldslege1RegisterFields<BaseRegister, false, RegisterResetValue,
-                                     WriteFieldslem1, WriteFieldslem1FieldType,
-                                     FieldTypesgep1...>;
+      WriteFieldslege1RegisterFields<
+          WriteRegisterType, false, WriteRegisterResetValue,
+          WriteWriteFieldslem1RegisterFieldsType,
+          WriteWriteFieldslem1RegisterFieldsFieldType,
+          WriteFieldsgep1Types...>;
 
 protected:
   using WriteFieldslege1RegisterFieldsgep1Type::getInverseMask;
@@ -345,38 +424,45 @@ protected:
 public:
   using WriteFieldslege1RegisterFieldsgep1Type::write;
 
-  WriteFieldslege1RegisterFields(const BaseRegister &BR,
-                                 const WriteFieldslem1 &WFm1,
-                                 const WriteFieldslem1FieldType WFm1F)
-      : WriteFieldslege1RegisterFieldsgep1Type(BR, WFm1, WFm1F) {}
+  WriteFieldslege1RegisterFields(
+      const WriteRegisterType &WriteRegister,
+      const WriteWriteFieldslem1RegisterFieldsType
+          &WriteWriteFieldslem1RegisterFields,
+      const WriteWriteFieldslem1RegisterFieldsFieldType
+          WriteWriteFieldslem1RegisterFieldsField)
+      : WriteFieldslege1RegisterFieldsgep1Type(
+            WriteRegister, WriteWriteFieldslem1RegisterFields,
+            WriteWriteFieldslem1RegisterFieldsField) {}
 
 private:
   using WriteFieldslep1RegisterFieldsType = WriteFieldslege1RegisterFields<
-      BaseRegister, MightAllFieldsBeWritten, RegisterResetValue,
-      WriteFieldslege1RegisterFieldsType, FieldType, FieldTypesgep1...>;
+      WriteRegisterType, WriteMightAllFieldsBeWritten, WriteRegisterResetValue,
+      WriteFieldslege1RegisterFieldsType, WriteFieldType,
+      WriteFieldsgep1Types...>;
 
 public:
-  auto write(const FieldType F) const {
-    return WriteFieldslep1RegisterFieldsType(this->BR, *this, F);
+  auto write(const WriteFieldType F) const {
+    return WriteFieldslep1RegisterFieldsType(this->R, *this, F);
   }
 };
 
 } // namespace
 
-template <class BaseRegister,
-          typename BaseRegister::ValueType RegisterResetValue,
-          class... FieldTypes>
+template <class RegisterRegisterType,
+          typename RegisterRegisterType::ValueType RegisterResetValue,
+          class... RegisterFieldTypes>
 class Register
-    : public WriteRegisterFields<BaseRegister, true, RegisterResetValue,
-                                 FieldTypes...> {
+    : public WriteRegisterFields<RegisterRegisterType, true,
+                                 RegisterResetValue, RegisterFieldTypes...> {
   using WriteRegisterFieldsType =
-      WriteRegisterFields<BaseRegister, true, RegisterResetValue,
-                          FieldTypes...>;
+      WriteRegisterFields<RegisterRegisterType, true, RegisterResetValue,
+                          RegisterFieldTypes...>;
 
 public:
   using WriteRegisterFieldsType::write;
 
-  Register(const BaseRegister &BR) : WriteRegisterFieldsType(BR) {}
+  Register(const RegisterRegisterType &RegisterRegister)
+      : WriteRegisterFieldsType(RegisterRegister) {}
 };
 
 } // namespace tiva

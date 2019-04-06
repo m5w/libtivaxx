@@ -20,34 +20,33 @@
 
 namespace tiva {
 
-template <class FieldFieldFieldType, class FieldFieldIsValueValid>
-class FieldField : public BaseField<typename FieldFieldFieldType::ValueType> {
+template <class FieldFieldType, class FieldIsValueValidType>
+class FieldField : public BaseField<typename FieldFieldType::ValueType> {
 public:
-  using ValueType = typename FieldFieldFieldType::ValueType;
+  using ValueType = typename FieldFieldType::ValueType;
 
 private:
   using BaseFieldType = BaseField<ValueType>;
 
-  constexpr explicit FieldField(const FieldFieldFieldType FieldFieldField)
+  constexpr explicit FieldField(const FieldFieldType FieldFieldField)
       : BaseFieldType(FieldFieldField) {}
 
 public:
-  static constexpr auto getMask() { return FieldFieldFieldType::getMask(); }
+  static constexpr auto getMask() { return FieldFieldType::getMask(); }
 
   static constexpr bool isValueValid(const ValueType FieldFieldFieldValue) {
-    constexpr FieldFieldIsValueValid IsValueValid;
-    return FieldFieldFieldType::isValueValid(FieldFieldFieldValue) &&
+    constexpr FieldIsValueValidType IsValueValid;
+    return FieldFieldType::isValueValid(FieldFieldFieldValue) &&
            IsValueValid(FieldFieldFieldValue);
   }
 
   template <ValueType FieldFieldFieldValue>
   static constexpr FieldField make() {
     static_assert(isValueValid(FieldFieldFieldValue));
-    return FieldField(
-        FieldFieldFieldType::template make<FieldFieldFieldValue>());
+    return FieldField(FieldFieldType::template make<FieldFieldFieldValue>());
   }
 
-  static FieldField UNSAFE_make(const FieldFieldFieldType FieldFieldField) {
+  static FieldField UNSAFE_make(const FieldFieldType FieldFieldField) {
     return FieldField(FieldFieldField);
   }
 };
