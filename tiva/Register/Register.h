@@ -29,32 +29,56 @@ template <class WriteRegisterFieldsRegisterType,
           class WriteRegisterFieldsFieldType,
           class... WriteRegisterFieldsFieldTypesgep1Types>
 class WriteRegisterFields;
+template <class ReadWriteRegisterFieldsRegisterType,
+          class ReadWriteRegisterFieldsFieldType,
+          class... ReadWriteRegisterFieldsFieldTypesgep1Types>
+class ReadWriteRegisterFields;
 template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
           typename WriteRegisterType::ValueType WriteRegisterResetValue,
           class WriteWriteType>
 class Write;
+template <class ReadWriteRegisterType, class ReadWriteReadWriteType>
+class ReadWrite;
 template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
           typename WriteRegisterType::ValueType WriteRegisterResetValue,
           class WriteWriteRegisterFieldsm1Type,
           class WriteWriteRegisterFieldsm1FieldType>
 class WriteField0;
+template <class ReadWriteRegisterType,
+          class ReadWriteReadWriteRegisterFieldsm1Type,
+          class ReadWriteReadWriteRegisterFieldsm1FieldType>
+class ReadWriteField0;
 template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
           typename WriteRegisterType::ValueType WriteRegisterResetValue,
           class WriteWriteRegisterFieldsm1Type,
           class WriteWriteRegisterFieldsm1FieldType, class WriteFieldType,
           class... WriteFieldsgep1Types>
 class WriteField0RegisterFields;
+template <class ReadWriteRegisterType,
+          class ReadWriteReadWriteRegisterFieldsm1Type,
+          class ReadWriteReadWriteRegisterFieldsm1FieldType,
+          class ReadWriteFieldType, class... ReadWriteFieldsgep1Types>
+class ReadWriteField0RegisterFields;
 template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
           typename WriteRegisterType::ValueType WriteRegisterResetValue,
           class WriteWriteFieldslem1RegisterFieldsType,
           class WriteWriteFieldslem1RegisterFieldsFieldType>
 class WriteFieldslege1;
-template <class RegisterType, bool WriteMightAllFieldsBeWritten,
-          typename RegisterType::ValueType WriteRegisterResetValue,
+template <class ReadWriteRegisterType,
+          class ReadWriteReadWriteFieldslem1RegisterFieldsType,
+          class ReadWriteReadWriteFieldslem1RegisterFieldsFieldType>
+class ReadWriteFieldslege1;
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
           class WriteWriteFieldslem1RegisterFieldsType,
           class WriteWriteFieldslem1RegisterFieldsFieldType,
           class WriteFieldType, class... WriteFieldsgep1Types>
 class WriteFieldslege1RegisterFields;
+template <class ReadWriteRegisterType,
+          class ReadWriteReadWriteFieldslem1RegisterFieldsType,
+          class ReadWriteReadWriteFieldslem1RegisterFieldsFieldType,
+          class ReadWriteFieldType, class... ReadWriteFieldsgep1Types>
+class ReadWriteFieldslege1RegisterFields;
 
 template <class WriteRegisterFieldsRegisterType,
           bool WriteRegisterFieldsMightAllFieldsBeWritten,
