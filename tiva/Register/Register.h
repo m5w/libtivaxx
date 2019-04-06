@@ -211,6 +211,7 @@ private:
   using RegisterValueType =
       typename ReadWriteRegisterFieldsRegisterType::ValueType;
 
+public:
   ReadWriteRegisterFields(
       const ReadWriteRegisterFieldsRegisterType
           &ReadWriteRegisterFieldsRegister,
@@ -871,6 +872,19 @@ public:
   }
 };
 
+template <class ReadRegisterType, class... ReadRegisterFieldTypes>
+class Read : public ReadWriteRegisterFields<ReadRegisterType,
+                                            ReadRegisterFieldTypes...> {
+  using ReadWriteRegisterFieldsType =
+      ReadWriteRegisterFields<ReadRegisterType, ReadRegisterFieldTypes...>;
+
+public:
+  using ReadWriteRegisterFieldsType::write;
+
+  Read(const ReadRegisterType &ReadRegister)
+      : ReadWriteRegisterFieldsType(ReadRegister, ReadRegister.read()) {}
+};
+
 } // namespace
 
 template <class RegisterRegisterType,
@@ -879,6 +893,7 @@ template <class RegisterRegisterType,
 class Register
     : public WriteRegisterFields<RegisterRegisterType, true,
                                  RegisterResetValue, RegisterFieldTypes...> {
+  const RegisterRegisterType &R;
   using WriteRegisterFieldsType =
       WriteRegisterFields<RegisterRegisterType, true, RegisterResetValue,
                           RegisterFieldTypes...>;
@@ -887,7 +902,11 @@ public:
   using WriteRegisterFieldsType::write;
 
   Register(const RegisterRegisterType &RegisterRegister)
-      : WriteRegisterFieldsType(RegisterRegister) {}
+      : WriteRegisterFieldsType(RegisterRegister), R(RegisterRegister) {}
+
+  auto read() const {
+    return Read<RegisterRegisterType, RegisterFieldTypes...>(this->R);
+  }
 };
 
 } // namespace tiva

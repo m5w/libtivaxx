@@ -79,6 +79,9 @@ extern "C" void main() {
   A = 0xff'ff'ff'ffu;
   Register0.write(Nibble0Field::make<0x1u>()).write();
   assert(A == 0x00'00'00'01u);
+  A = 0xff'ff'ff'ffu;
+  Register0.read().write(Nibble0Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'ff'f1u);
 
   // # 2-Field Register
 
@@ -94,10 +97,16 @@ extern "C" void main() {
   A = 0xff'ff'ff'ffu;
   Register1.write(Nibble0Field::make<0x1u>()).write();
   assert(A == 0xff'ff'ff'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register1.read().write(Nibble0Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'ff'f1u);
 
   // 1
   A = 0xff'ff'ff'ffu;
   Register1.write(Nibble1Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'ff'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register1.read().write(Nibble1Field::make<0x1u>()).write();
   assert(A == 0xff'ff'ff'1fu);
 
   // ## 2-Field Paths
@@ -113,6 +122,12 @@ extern "C" void main() {
       .write(Nibble1Field::make<0x1u>())
       .write();
   assert(A == 0x00'00'00'11u);
+  A = 0xff'ff'ff'ffu;
+  Register1.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'ff'11u);
 
   // # 3-Field Register
 
@@ -129,15 +144,24 @@ extern "C" void main() {
   A = 0xff'ff'ff'ffu;
   Register2.write(Nibble0Field::make<0x1u>()).write();
   assert(A == 0xff'ff'ff'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register2.read().write(Nibble0Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'ff'f1u);
 
   // 1
   A = 0xff'ff'ff'ffu;
   Register2.write(Nibble1Field::make<0x1u>()).write();
   assert(A == 0xff'ff'ff'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register2.read().write(Nibble1Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'ff'1fu);
 
   // 2
   A = 0xff'ff'ff'ffu;
   Register2.write(Nibble2Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'f1'ffu);
+  A = 0xff'ff'ff'ffu;
+  Register2.read().write(Nibble2Field::make<0x1u>()).write();
   assert(A == 0xff'ff'f1'ffu);
 
   // ## 2-Field Paths
@@ -155,6 +179,12 @@ extern "C" void main() {
       .write(Nibble1Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'ff'11u);
+  A = 0xff'ff'ff'ffu;
+  Register2.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'ff'11u);
 
   // 0-2
   A = 0xff'ff'ff'ffu;
@@ -162,10 +192,22 @@ extern "C" void main() {
       .write(Nibble2Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'f1'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register2.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'f1'f1u);
 
   // 1-2
   A = 0xff'ff'ff'ffu;
   Register2.write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'f1'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register2.read()
+      .write(Nibble1Field::make<0x1u>())
       .write(Nibble2Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'f1'1fu);
@@ -184,6 +226,13 @@ extern "C" void main() {
       .write(Nibble2Field::make<0x1u>())
       .write();
   assert(A == 0x00'00'01'11u);
+  A = 0xff'ff'ff'ffu;
+  Register2.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'f1'11u);
 
   // # 4-Field Register
 
@@ -201,20 +250,32 @@ extern "C" void main() {
   A = 0xff'ff'ff'ffu;
   Register3.write(Nibble0Field::make<0x1u>()).write();
   assert(A == 0xff'ff'ff'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register3.read().write(Nibble0Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'ff'f1u);
 
   // 1
   A = 0xff'ff'ff'ffu;
   Register3.write(Nibble1Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'ff'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register3.read().write(Nibble1Field::make<0x1u>()).write();
   assert(A == 0xff'ff'ff'1fu);
 
   // 2
   A = 0xff'ff'ff'ffu;
   Register3.write(Nibble2Field::make<0x1u>()).write();
   assert(A == 0xff'ff'f1'ffu);
+  A = 0xff'ff'ff'ffu;
+  Register3.read().write(Nibble2Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'f1'ffu);
 
   // 3
   A = 0xff'ff'ff'ffu;
   Register3.write(Nibble3Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'1f'ffu);
+  A = 0xff'ff'ff'ffu;
+  Register3.read().write(Nibble3Field::make<0x1u>()).write();
   assert(A == 0xff'ff'1f'ffu);
 
   // ## 2-Field Paths
@@ -235,10 +296,22 @@ extern "C" void main() {
       .write(Nibble1Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'ff'11u);
+  A = 0xff'ff'ff'ffu;
+  Register3.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'ff'11u);
 
   // 0-2
   A = 0xff'ff'ff'ffu;
   Register3.write(Nibble0Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'f1'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register3.read()
+      .write(Nibble0Field::make<0x1u>())
       .write(Nibble2Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'f1'f1u);
@@ -249,10 +322,22 @@ extern "C" void main() {
       .write(Nibble3Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'1f'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register3.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'1f'f1u);
 
   // 1-2
   A = 0xff'ff'ff'ffu;
   Register3.write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'f1'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register3.read()
+      .write(Nibble1Field::make<0x1u>())
       .write(Nibble2Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'f1'1fu);
@@ -263,10 +348,22 @@ extern "C" void main() {
       .write(Nibble3Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'1f'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register3.read()
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'1f'1fu);
 
   // 2-3
   A = 0xff'ff'ff'ffu;
   Register3.write(Nibble2Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'11'ffu);
+  A = 0xff'ff'ff'ffu;
+  Register3.read()
+      .write(Nibble2Field::make<0x1u>())
       .write(Nibble3Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'11'ffu);
@@ -288,10 +385,24 @@ extern "C" void main() {
       .write(Nibble2Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'f1'11u);
+  A = 0xff'ff'ff'ffu;
+  Register3.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'f1'11u);
 
   // 0-1-3
   A = 0xff'ff'ff'ffu;
   Register3.write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'1f'11u);
+  A = 0xff'ff'ff'ffu;
+  Register3.read()
+      .write(Nibble0Field::make<0x1u>())
       .write(Nibble1Field::make<0x1u>())
       .write(Nibble3Field::make<0x1u>())
       .write();
@@ -304,10 +415,24 @@ extern "C" void main() {
       .write(Nibble3Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'11'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register3.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'11'f1u);
 
   // 1-2-3
   A = 0xff'ff'ff'ffu;
   Register3.write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'11'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register3.read()
+      .write(Nibble1Field::make<0x1u>())
       .write(Nibble2Field::make<0x1u>())
       .write(Nibble3Field::make<0x1u>())
       .write();
@@ -328,6 +453,14 @@ extern "C" void main() {
       .write(Nibble3Field::make<0x1u>())
       .write();
   assert(A == 0x00'00'11'11u);
+  A = 0xff'ff'ff'ffu;
+  Register3.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'11'11u);
 
   // # 5-Field Register
 
@@ -346,25 +479,40 @@ extern "C" void main() {
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble0Field::make<0x1u>()).write();
   assert(A == 0xff'ff'ff'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read().write(Nibble0Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'ff'f1u);
 
   // 1
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble1Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'ff'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read().write(Nibble1Field::make<0x1u>()).write();
   assert(A == 0xff'ff'ff'1fu);
 
   // 2
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble2Field::make<0x1u>()).write();
   assert(A == 0xff'ff'f1'ffu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read().write(Nibble2Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'f1'ffu);
 
   // 3
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble3Field::make<0x1u>()).write();
   assert(A == 0xff'ff'1f'ffu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read().write(Nibble3Field::make<0x1u>()).write();
+  assert(A == 0xff'ff'1f'ffu);
 
   // 4
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble4Field::make<0x1u>()).write();
+  assert(A == 0xff'f1'ff'ffu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read().write(Nibble4Field::make<0x1u>()).write();
   assert(A == 0xff'f1'ff'ffu);
 
   // ## 2-Field Paths
@@ -389,10 +537,22 @@ extern "C" void main() {
       .write(Nibble1Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'ff'11u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'ff'11u);
 
   // 0-2
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble0Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'f1'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
       .write(Nibble2Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'f1'f1u);
@@ -403,10 +563,22 @@ extern "C" void main() {
       .write(Nibble3Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'1f'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'1f'f1u);
 
   // 0-4
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble0Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'ff'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
       .write(Nibble4Field::make<0x1u>())
       .write();
   assert(A == 0xff'f1'ff'f1u);
@@ -417,10 +589,22 @@ extern "C" void main() {
       .write(Nibble2Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'f1'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'f1'1fu);
 
   // 1-3
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble1Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'1f'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble1Field::make<0x1u>())
       .write(Nibble3Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'1f'1fu);
@@ -431,10 +615,22 @@ extern "C" void main() {
       .write(Nibble4Field::make<0x1u>())
       .write();
   assert(A == 0xff'f1'ff'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'ff'1fu);
 
   // 2-3
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble2Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'11'ffu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble2Field::make<0x1u>())
       .write(Nibble3Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'11'ffu);
@@ -445,10 +641,22 @@ extern "C" void main() {
       .write(Nibble4Field::make<0x1u>())
       .write();
   assert(A == 0xff'f1'f1'ffu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble2Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'f1'ffu);
 
   // 3-4
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble3Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'1f'ffu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble3Field::make<0x1u>())
       .write(Nibble4Field::make<0x1u>())
       .write();
   assert(A == 0xff'f1'1f'ffu);
@@ -476,10 +684,24 @@ extern "C" void main() {
       .write(Nibble2Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'f1'11u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'f1'11u);
 
   // 0-1-3
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'1f'11u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
       .write(Nibble1Field::make<0x1u>())
       .write(Nibble3Field::make<0x1u>())
       .write();
@@ -492,10 +714,24 @@ extern "C" void main() {
       .write(Nibble4Field::make<0x1u>())
       .write();
   assert(A == 0xff'f1'ff'11u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'ff'11u);
 
   // 0-2-3
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble0Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'11'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
       .write(Nibble2Field::make<0x1u>())
       .write(Nibble3Field::make<0x1u>())
       .write();
@@ -508,10 +744,24 @@ extern "C" void main() {
       .write(Nibble4Field::make<0x1u>())
       .write();
   assert(A == 0xff'f1'f1'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'f1'f1u);
 
   // 0-3-4
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble0Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'1f'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
       .write(Nibble3Field::make<0x1u>())
       .write(Nibble4Field::make<0x1u>())
       .write();
@@ -524,10 +774,24 @@ extern "C" void main() {
       .write(Nibble3Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'11'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'11'1fu);
 
   // 1-2-4
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'f1'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble1Field::make<0x1u>())
       .write(Nibble2Field::make<0x1u>())
       .write(Nibble4Field::make<0x1u>())
       .write();
@@ -540,10 +804,24 @@ extern "C" void main() {
       .write(Nibble4Field::make<0x1u>())
       .write();
   assert(A == 0xff'f1'1f'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'1f'1fu);
 
   // 2-3-4
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble2Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'11'ffu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble2Field::make<0x1u>())
       .write(Nibble3Field::make<0x1u>())
       .write(Nibble4Field::make<0x1u>())
       .write();
@@ -568,10 +846,26 @@ extern "C" void main() {
       .write(Nibble3Field::make<0x1u>())
       .write();
   assert(A == 0xff'ff'11'11u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'ff'11'11u);
 
   // * 0-1-2-4
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'f1'11u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
       .write(Nibble1Field::make<0x1u>())
       .write(Nibble2Field::make<0x1u>())
       .write(Nibble4Field::make<0x1u>())
@@ -586,6 +880,14 @@ extern "C" void main() {
       .write(Nibble4Field::make<0x1u>())
       .write();
   assert(A == 0xff'f1'1f'11u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'1f'11u);
 
   // * 0-2-3-4
   A = 0xff'ff'ff'ffu;
@@ -595,10 +897,26 @@ extern "C" void main() {
       .write(Nibble4Field::make<0x1u>())
       .write();
   assert(A == 0xff'f1'11'f1u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'11'f1u);
 
   // * 1-2-3-4
   A = 0xff'ff'ff'ffu;
   Register4.write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'11'1fu);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble1Field::make<0x1u>())
       .write(Nibble2Field::make<0x1u>())
       .write(Nibble3Field::make<0x1u>())
       .write(Nibble4Field::make<0x1u>())
@@ -621,6 +939,15 @@ extern "C" void main() {
       .write(Nibble4Field::make<0x1u>())
       .write();
   assert(A == 0x00'01'11'11u);
+  A = 0xff'ff'ff'ffu;
+  Register4.read()
+      .write(Nibble0Field::make<0x1u>())
+      .write(Nibble1Field::make<0x1u>())
+      .write(Nibble2Field::make<0x1u>())
+      .write(Nibble3Field::make<0x1u>())
+      .write(Nibble4Field::make<0x1u>())
+      .write();
+  assert(A == 0xff'f1'11'11u);
 
   for (;;)
     ;
