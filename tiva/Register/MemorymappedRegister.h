@@ -22,23 +22,24 @@
 
 namespace tiva {
 
-template <class Value> class MemorymappedRegister {
+template <class RegisterValueType> class MemorymappedRegister {
+public:
+  using ValueType = RegisterValueType;
+
 protected:
   std::uint32_t Address;
 
 public:
-  constexpr MemorymappedRegister(const std::uint32_t Address)
-      : Address(Address) {}
+  constexpr MemorymappedRegister(const std::uint32_t RegisterAddress)
+      : Address(RegisterAddress) {}
 
   auto read() const {
-    return *reinterpret_cast<const volatile Value *>(this->Address);
+    return *reinterpret_cast<const volatile ValueType *>(this->Address);
   }
 
-  void write(const Value V) const {
-    *reinterpret_cast<volatile Value *>(this->Address) = V;
+  void write(const ValueType RegisterValue) const {
+    *reinterpret_cast<volatile ValueType *>(this->Address) = RegisterValue;
   }
-
-  using ValueType = Value;
 };
 
 } // namespace tiva

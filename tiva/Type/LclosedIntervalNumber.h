@@ -20,42 +20,47 @@
 
 namespace tiva {
 
-template <class IntervalNumberType, IntervalNumberType IntervalLEndpoint,
-          IntervalNumberType IntervalREndpoint>
+template <class IntervalNumberNumberType,
+          IntervalNumberNumberType IntervalNumberIntervalLEndpoint,
+          IntervalNumberNumberType IntervalNumberIntervalREndpoint>
 class LclosedIntervalNumber {
-  static_assert(IntervalLEndpoint < IntervalREndpoint);
-  friend LclosedIntervalNumber<IntervalNumberType, IntervalLEndpoint + 1,
-                               IntervalREndpoint>;
-  friend LclosedIntervalNumber<IntervalNumberType, IntervalLEndpoint,
-                               IntervalREndpoint - 1>;
+  static_assert(IntervalNumberIntervalLEndpoint <
+                IntervalNumberIntervalREndpoint);
 
 public:
-  using ValueType = IntervalNumberType;
+  using ValueType = IntervalNumberNumberType;
+
+private:
+  friend LclosedIntervalNumber<ValueType, IntervalNumberIntervalLEndpoint + 1,
+                               IntervalNumberIntervalREndpoint>;
+  friend LclosedIntervalNumber<ValueType, IntervalNumberIntervalLEndpoint,
+                               IntervalNumberIntervalREndpoint - 1>;
 
 private:
   ValueType V;
 
-  constexpr explicit LclosedIntervalNumber(const ValueType NumberValue)
-      : V(NumberValue) {}
+  constexpr explicit LclosedIntervalNumber(const ValueType IntervalNumberValue)
+      : V(IntervalNumberValue) {}
 
-  static constexpr bool isValueValid(const ValueType NumberValue) {
-    return (NumberValue >= IntervalLEndpoint) &&
-           (NumberValue < IntervalREndpoint);
+  static constexpr bool isValueValid(const ValueType IntervalNumberValue) {
+    return (IntervalNumberValue >= IntervalNumberIntervalLEndpoint) &&
+           (IntervalNumberValue < IntervalNumberIntervalREndpoint);
   }
 
 public:
-  template <ValueType NumberValue>
+  template <ValueType IntervalNumberValue>
   static constexpr LclosedIntervalNumber make() {
-    static_assert(isValueValid(NumberValue));
-    return LclosedIntervalNumber(NumberValue);
+    static_assert(isValueValid(IntervalNumberValue));
+    return LclosedIntervalNumber(IntervalNumberValue);
   }
 
   constexpr operator ValueType() const { return this->V; }
 
 private:
   using IntervalLEndpointm1Type =
-      LclosedIntervalNumber<IntervalNumberType, IntervalLEndpoint - 1,
-                            IntervalREndpoint>;
+      LclosedIntervalNumber<IntervalNumberNumberType,
+                            IntervalNumberIntervalLEndpoint - 1,
+                            IntervalNumberIntervalREndpoint>;
 
 public:
   constexpr operator IntervalLEndpointm1Type() const {
@@ -64,8 +69,9 @@ public:
 
 private:
   using IntervalREndpointp1Type =
-      LclosedIntervalNumber<IntervalNumberType, IntervalLEndpoint,
-                            IntervalREndpoint + 1>;
+      LclosedIntervalNumber<IntervalNumberNumberType,
+                            IntervalNumberIntervalLEndpoint,
+                            IntervalNumberIntervalREndpoint + 1>;
 
 public:
   constexpr operator IntervalREndpointp1Type() const {
