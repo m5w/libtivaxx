@@ -29,6 +29,8 @@ template <class RegisterFieldFieldType> class BaseRegisterField {
   ValueType V;
 
 protected:
+  constexpr explicit BaseRegisterField() = default;
+
   constexpr explicit BaseRegisterField(const ValueType RegisterFieldValue)
       : V(RegisterFieldValue) {}
 

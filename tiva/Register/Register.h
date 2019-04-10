@@ -132,6 +132,20 @@ public:
 template <class ReadRRegisterFieldsRegisterType,
           class ReadRRegisterFieldsReadRRegisterFieldsType,
           class ReadRRegisterFieldsFieldType>
+bool operator==(
+    const ReadRRegisterFields<ReadRRegisterFieldsRegisterType,
+                              ReadRRegisterFieldsReadRRegisterFieldsType,
+                              ReadRRegisterFieldsFieldType> &LhandSide,
+    const ReadRRegisterFields<ReadRRegisterFieldsRegisterType,
+                              ReadRRegisterFieldsReadRRegisterFieldsType,
+                              ReadRRegisterFieldsFieldType> &RhandSide) {
+  return (LhandSide.R == RhandSide.R) &&
+         (LhandSide.RegisterValue == RhandSide.RegisterValue);
+}
+
+template <class ReadRRegisterFieldsRegisterType,
+          class ReadRRegisterFieldsReadRRegisterFieldsType,
+          class ReadRRegisterFieldsFieldType>
 class ReadRRegisterFields<ReadRRegisterFieldsRegisterType,
                           ReadRRegisterFieldsReadRRegisterFieldsType,
                           ReadRRegisterFieldsFieldType> {
@@ -150,6 +164,9 @@ public:
       const RegisterValueType ReadRRegisterFieldsRegisterValue)
       : R(ReadRRegisterFieldsRegister),
         RegisterValue(ReadRRegisterFieldsRegisterValue) {}
+
+  friend bool operator==<>(const ReadRRegisterFields &LhandSide,
+                           const ReadRRegisterFields &RhandSide);
 
 private:
   using FieldReadRegisterFieldType = typename FieldType::ReadRegisterFieldType;
@@ -204,7 +221,7 @@ template <class ReadRRegisterFieldsRegisterType,
           class... ReadRRegisterFieldsFieldsTypes>
 class ReadRRegisterFieldsge0
     : public ReadRRegisterFieldsReadWRegisterFieldsType,
-      ReadRRegisterFields<
+      public ReadRRegisterFields<
           ReadRRegisterFieldsRegisterType,
           ReadRRegisterFieldsge0<ReadRRegisterFieldsRegisterType,
                                  ReadRRegisterFieldsReadWRegisterFieldsType,

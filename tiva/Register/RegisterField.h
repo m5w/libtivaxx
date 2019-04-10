@@ -44,14 +44,17 @@ public:
 
 private:
   class ReadRegisterField : public UNSAFE_RegisterFieldType {
-    explicit ReadRegisterField(const FieldType RegisterFieldField)
-        : UNSAFE_RegisterFieldType(RegisterFieldField) {}
-
   public:
     using UNSAFE_RegisterFieldType::getMask;
 
+    explicit ReadRegisterField() = default;
+
+    explicit ReadRegisterField(const FieldValueType RegisterFieldValue)
+        : UNSAFE_RegisterFieldType(RegisterFieldValue) {}
+
     static ReadRegisterField read(const FieldValueType RegisterValue) {
-      return ReadRegisterField(RegisterValue & getMask());
+      return ReadRegisterField(
+          FieldType::UNSAFE_make(RegisterValue & getMask()));
     }
   };
 

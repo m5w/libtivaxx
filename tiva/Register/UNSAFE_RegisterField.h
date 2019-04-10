@@ -48,6 +48,11 @@ class UNSAFE_RegisterField : public BaseRegisterField<RegisterFieldFieldType> {
 protected:
   static constexpr auto getMask() { return Mask; }
 
+  constexpr explicit UNSAFE_RegisterField() = default;
+
+  constexpr explicit UNSAFE_RegisterField(const ValueType RegisterFieldValue)
+      : BaseRegisterFieldType(RegisterFieldValue) {}
+
   constexpr explicit UNSAFE_RegisterField(const FieldType RegisterFieldField)
       : BaseRegisterFieldType(RegisterFieldField
                               << LsignificantRegisterBitNumber) {}
