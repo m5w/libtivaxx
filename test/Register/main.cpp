@@ -18,8 +18,8 @@
 #include <cassert>
 #include <cstdint>
 
+#include <tiva/Field/DerivedField.h>
 #include <tiva/Field/Field.h>
-#include <tiva/Field/FieldField.h>
 #include <tiva/Register/MemorymappedRegister.h>
 #include <tiva/Register/Register.h>
 #include <tiva/Register/RegisterField.h>
@@ -36,7 +36,7 @@ public:
 };
 
 using FieldType =
-    tiva::FieldField<tiva::Field<std::uint32_t, 0x04>, IsValueValid>;
+    tiva::DerivedField<tiva::Field<std::uint32_t, 0x04>, IsValueValid>;
 
 } // namespace NibbleField
 

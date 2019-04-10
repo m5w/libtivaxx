@@ -15,26 +15,36 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_FIELD_BASEFIELD_H
-#define TIVA_FIELD_BASEFIELD_H
+#ifndef TIVA_FIELD_UNSAFE_FIELD_H
+#define TIVA_FIELD_UNSAFE_FIELD_H
+
+#include "tiva/Field/BaseField.h"
+#include "tiva/Field/FieldSize.h"
+#include "tiva/Type/getLsignificantBits.h"
 
 namespace tiva {
 
 namespace detail {
 
-template <class FieldValueType> class BaseField {
+template <class FieldValueType,
+          typename FieldSize<FieldValueType>::ValueType FieldSizeValue>
+class UNSAFE_Field : public BaseField<FieldValueType> {
   using ValueType = FieldValueType;
-  ValueType V;
+  static constexpr auto SizeValue{FieldSizeValue};
+  static constexpr auto Size{FieldSize<ValueType>::template make<SizeValue>()};
+  static constexpr auto Mask{getLsignificantBits<ValueType>(Size)};
+  using BaseFieldType = BaseField<ValueType>;
 
 protected:
-  constexpr explicit BaseField(const ValueType FieldValue) : V(FieldValue) {}
+  constexpr explicit UNSAFE_Field(const ValueType FieldValue)
+      : BaseFieldType(FieldValue) {}
 
 public:
-  constexpr operator ValueType() const { return this->V; }
+  static constexpr auto getMask() { return Mask; }
 };
 
 } // namespace detail
 
 } // namespace tiva
 
-#endif // TIVA_FIELD_BASEFIELD_H
+#endif // TIVA_FIELD_UNSAFE_FIELD_H

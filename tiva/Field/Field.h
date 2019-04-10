@@ -18,56 +18,28 @@
 #ifndef TIVA_FIELD_FIELD_H
 #define TIVA_FIELD_FIELD_H
 
-#include <limits>
-
-#include "tiva/Field/BaseField.h"
-#include "tiva/Type/LclosedIntervalNumber.h"
+#include "tiva/Field/UNSAFE_Field.h"
 
 namespace tiva {
 
-template <class ValueType>
-constexpr ValueType
-getLsignificantBits(const LclosedIntervalNumber<
-                    decltype(std::numeric_limits<ValueType>::digits), 0,
-                    std::numeric_limits<ValueType>::digits + 1>
-                        LsignificantBitsCount) {
-  if (LsignificantBitsCount == 0)
-    return 0;
-
-  return std::numeric_limits<ValueType>::max() >>
-         (std::numeric_limits<ValueType>::digits - LsignificantBitsCount);
-}
-
-namespace {
-
-template <class FieldValueType>
-using FieldSize =
-    LclosedIntervalNumber<decltype(
-                              std::numeric_limits<FieldValueType>::digits),
-                          1, std::numeric_limits<FieldValueType>::digits + 1>;
-
-} // namespace
-
 template <class FieldValueType,
-          typename FieldSize<FieldValueType>::ValueType FieldSizeValue>
-class Field : public BaseField<FieldValueType> {
+          typename detail::FieldSize<FieldValueType>::ValueType FieldSizeValue>
+class Field : public detail::UNSAFE_Field<FieldValueType, FieldSizeValue> {
 public:
   using ValueType = FieldValueType;
+  static constexpr auto SizeValue{FieldSizeValue};
 
 private:
-  static constexpr auto Size{
-      FieldSize<ValueType>::template make<FieldSizeValue>()};
-  static constexpr auto Mask{getLsignificantBits<ValueType>(Size)};
-  using BaseFieldType = BaseField<ValueType>;
+  using UNSAFE_FieldType = detail::UNSAFE_Field<ValueType, SizeValue>;
 
   constexpr explicit Field(const ValueType FieldValue)
-      : BaseFieldType(FieldValue) {}
+      : UNSAFE_FieldType(FieldValue) {}
 
 public:
-  static constexpr auto getMask() { return Mask; }
+  using UNSAFE_FieldType::getMask;
 
   static constexpr bool isValueValid(const ValueType FieldValue) {
-    return (FieldValue & Mask) == FieldValue;
+    return (FieldValue & getMask()) == FieldValue;
   }
 
   template <ValueType FieldValue> static constexpr Field make() {

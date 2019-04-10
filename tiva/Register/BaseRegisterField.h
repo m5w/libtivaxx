@@ -15,19 +15,22 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_FIELD_BASEFIELD_H
-#define TIVA_FIELD_BASEFIELD_H
+#ifndef TIVA_REGISTER_BASEREGISTERFIELD_H
+#define TIVA_REGISTER_BASEREGISTERFIELD_H
 
 namespace tiva {
 
 namespace detail {
 
-template <class FieldValueType> class BaseField {
+template <class RegisterFieldFieldType> class BaseRegisterField {
+  using FieldType = RegisterFieldFieldType;
+  using FieldValueType = typename FieldType::ValueType;
   using ValueType = FieldValueType;
   ValueType V;
 
 protected:
-  constexpr explicit BaseField(const ValueType FieldValue) : V(FieldValue) {}
+  constexpr explicit BaseRegisterField(const ValueType RegisterFieldValue)
+      : V(RegisterFieldValue) {}
 
 public:
   constexpr operator ValueType() const { return this->V; }
@@ -37,4 +40,4 @@ public:
 
 } // namespace tiva
 
-#endif // TIVA_FIELD_BASEFIELD_H
+#endif // TIVA_REGISTER_BASEREGISTERFIELD_H

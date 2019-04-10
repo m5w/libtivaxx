@@ -15,48 +15,46 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_REGISTER_REGISTERFIELD_H
-#define TIVA_REGISTER_REGISTERFIELD_H
+#ifndef TIVA_REGISTER_UNSAFE_REGISTERFIELD_H
+#define TIVA_REGISTER_UNSAFE_REGISTERFIELD_H
 
-#include "tiva/Register/UNSAFE_RegisterField.h"
+#include "tiva/Register/BaseRegisterField.h"
+#include "tiva/Register/RegisterBitNumber.h"
+#include "tiva/Type/getMsignificantBits.h"
 
 namespace tiva {
 
+namespace detail {
+
 template <class RegisterFieldFieldType,
-          typename detail::RegisterBitNumber<
+          typename RegisterBitNumber<
               typename RegisterFieldFieldType::ValueType>::ValueType
               RegisterFieldLsignificantRegisterBitNumberValue>
-class RegisterField : public detail::UNSAFE_RegisterField<
-                          RegisterFieldFieldType,
-                          RegisterFieldLsignificantRegisterBitNumberValue> {
-public:
+class UNSAFE_RegisterField : public BaseRegisterField<RegisterFieldFieldType> {
   using FieldType = RegisterFieldFieldType;
   static constexpr auto LsignificantRegisterBitNumberValue{
       RegisterFieldLsignificantRegisterBitNumberValue};
   using FieldValueType = typename FieldType::ValueType;
+  using ValueType = FieldValueType;
+  static constexpr auto LsignificantRegisterBitNumber{RegisterBitNumber<
+      ValueType>::template make<LsignificantRegisterBitNumberValue>()};
+  static_assert(
+      (FieldType::getMask() &
+       getMsignificantBits<ValueType>(LsignificantRegisterBitNumber)) == 0);
+  static constexpr auto Mask{FieldType::getMask()
+                             << LsignificantRegisterBitNumber};
+  using BaseRegisterFieldType = BaseRegisterField<FieldType>;
 
-private:
-  using UNSAFE_RegisterFieldType =
-      detail::UNSAFE_RegisterField<FieldType,
-                                   LsignificantRegisterBitNumberValue>;
+protected:
+  static constexpr auto getMask() { return Mask; }
 
-  constexpr explicit RegisterField(const FieldType RegisterFieldField)
-      : UNSAFE_RegisterFieldType(RegisterFieldField) {}
-
-public:
-  using UNSAFE_RegisterFieldType::getMask;
-
-  template <FieldValueType RegisterFieldFieldValue>
-  static constexpr RegisterField make() {
-    return RegisterField(FieldType::template make<RegisterFieldFieldValue>());
-  }
-
-  static RegisterField
-  UNSAFE_make(const FieldValueType RegisterFieldFieldValue) {
-    return RegisterField(FieldType::UNSAFE_make(RegisterFieldFieldValue));
-  }
+  constexpr explicit UNSAFE_RegisterField(const FieldType RegisterFieldField)
+      : BaseRegisterFieldType(RegisterFieldField
+                              << LsignificantRegisterBitNumber) {}
 };
+
+} // namespace detail
 
 } // namespace tiva
 
-#endif // TIVA_REGISTER_REGISTERFIELD_H
+#endif // TIVA_REGISTER_UNSAFE_REGISTERFIELD_H

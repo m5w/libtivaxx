@@ -15,26 +15,33 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_FIELD_BASEFIELD_H
-#define TIVA_FIELD_BASEFIELD_H
+#ifndef TIVA_TYPE_GETMSIGNIFICANTBITS_H
+#define TIVA_TYPE_GETMSIGNIFICANTBITS_H
+
+#include <limits>
+
+#include "tiva/Type/LclosedIntervalNumber.h"
+#include "tiva/Type/getLsignificantBits.h"
 
 namespace tiva {
 
 namespace detail {
 
-template <class FieldValueType> class BaseField {
-  using ValueType = FieldValueType;
-  ValueType V;
+template <class ValueType>
+constexpr ValueType
+getMsignificantBits(const LclosedIntervalNumber<
+                    decltype(std::numeric_limits<ValueType>::digits), 0,
+                    std::numeric_limits<ValueType>::digits + 1>
+                        MsignificantBitsCount) {
+  if (MsignificantBitsCount == 0)
+    return 0;
 
-protected:
-  constexpr explicit BaseField(const ValueType FieldValue) : V(FieldValue) {}
-
-public:
-  constexpr operator ValueType() const { return this->V; }
-};
+  return getLsignificantBits<ValueType>(MsignificantBitsCount)
+         << (std::numeric_limits<ValueType>::digits - MsignificantBitsCount);
+}
 
 } // namespace detail
 
 } // namespace tiva
 
-#endif // TIVA_FIELD_BASEFIELD_H
+#endif // TIVA_TYPE_GETMSIGNIFICANTBITS_H

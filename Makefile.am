@@ -34,12 +34,21 @@ libtiva___a_includedir = $(includedir)
 
 nobase_libtiva___a_include_HEADERS = \
 	tiva/Field/BaseField.h \
+	tiva/Field/DerivedField.h \
 	tiva/Field/Field.h \
-	tiva/Field/FieldField.h \
+	tiva/Field/FieldSize.h \
+	tiva/Field/UNSAFE_Field.h \
+	tiva/Register/BaseRegisterField.h \
 	tiva/Register/MemorymappedRegister.h \
 	tiva/Register/Register.h \
+	tiva/Register/RegisterBitNumber.h \
 	tiva/Register/RegisterField.h \
-	tiva/Type/LclosedIntervalNumber.h
+	tiva/Register/UNSAFE_RegisterField.h \
+	tiva/Type/BaseIntervalNumber.h \
+	tiva/Type/LclosedIntervalNumber.h \
+	tiva/Type/UNSAFE_LclosedIntervalNumber.h \
+	tiva/Type/getLsignificantBits.h \
+	tiva/Type/getMsignificantBits.h
 
 noinst_PROGRAMS = \
 	libtiva++-test-Register.axf

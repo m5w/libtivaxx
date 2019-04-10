@@ -18,34 +18,39 @@
 #ifndef TIVA_TYPE_LCLOSEDINTERVALNUMBER_H
 #define TIVA_TYPE_LCLOSEDINTERVALNUMBER_H
 
+#include "tiva/Type/UNSAFE_LclosedIntervalNumber.h"
+
 namespace tiva {
+
+namespace detail {
 
 template <class IntervalNumberNumberType,
           IntervalNumberNumberType IntervalNumberIntervalLEndpoint,
           IntervalNumberNumberType IntervalNumberIntervalREndpoint>
-class LclosedIntervalNumber {
-  static_assert(IntervalNumberIntervalLEndpoint <
-                IntervalNumberIntervalREndpoint);
-
+class LclosedIntervalNumber
+    : public UNSAFE_LclosedIntervalNumber<IntervalNumberNumberType,
+                                          IntervalNumberIntervalLEndpoint,
+                                          IntervalNumberIntervalREndpoint> {
 public:
-  using ValueType = IntervalNumberNumberType;
+  using NumberType = IntervalNumberNumberType;
+  static constexpr auto IntervalLEndpoint{IntervalNumberIntervalLEndpoint};
+  static constexpr auto IntervalREndpoint{IntervalNumberIntervalREndpoint};
+  using ValueType = NumberType;
 
 private:
-  friend LclosedIntervalNumber<ValueType, IntervalNumberIntervalLEndpoint + 1,
-                               IntervalNumberIntervalREndpoint>;
-  friend LclosedIntervalNumber<ValueType, IntervalNumberIntervalLEndpoint,
-                               IntervalNumberIntervalREndpoint - 1>;
+  friend LclosedIntervalNumber<ValueType, IntervalLEndpoint + 1,
+                               IntervalREndpoint>;
+  friend LclosedIntervalNumber<ValueType, IntervalLEndpoint,
+                               IntervalREndpoint - 1>;
+  using UNSAFE_LclosedIntervalNumberType =
+      UNSAFE_LclosedIntervalNumber<ValueType, IntervalLEndpoint,
+                                   IntervalREndpoint>;
 
 private:
-  ValueType V;
+  using UNSAFE_LclosedIntervalNumberType::isValueValid;
 
   constexpr explicit LclosedIntervalNumber(const ValueType IntervalNumberValue)
-      : V(IntervalNumberValue) {}
-
-  static constexpr bool isValueValid(const ValueType IntervalNumberValue) {
-    return (IntervalNumberValue >= IntervalNumberIntervalLEndpoint) &&
-           (IntervalNumberValue < IntervalNumberIntervalREndpoint);
-  }
+      : UNSAFE_LclosedIntervalNumberType(IntervalNumberValue) {}
 
 public:
   template <ValueType IntervalNumberValue>
@@ -54,30 +59,28 @@ public:
     return LclosedIntervalNumber(IntervalNumberValue);
   }
 
-  constexpr operator ValueType() const { return this->V; }
-
 private:
   using IntervalLEndpointm1Type =
-      LclosedIntervalNumber<IntervalNumberNumberType,
-                            IntervalNumberIntervalLEndpoint - 1,
-                            IntervalNumberIntervalREndpoint>;
+      LclosedIntervalNumber<ValueType, IntervalLEndpoint - 1,
+                            IntervalREndpoint>;
 
 public:
   constexpr operator IntervalLEndpointm1Type() const {
-    return IntervalLEndpointm1Type(this->V);
+    return IntervalLEndpointm1Type(static_cast<ValueType>(*this));
   }
 
 private:
   using IntervalREndpointp1Type =
-      LclosedIntervalNumber<IntervalNumberNumberType,
-                            IntervalNumberIntervalLEndpoint,
-                            IntervalNumberIntervalREndpoint + 1>;
+      LclosedIntervalNumber<ValueType, IntervalLEndpoint,
+                            IntervalREndpoint + 1>;
 
 public:
   constexpr operator IntervalREndpointp1Type() const {
-    return IntervalREndpointp1Type(this->V);
+    return IntervalREndpointp1Type(static_cast<ValueType>(*this));
   }
 };
+
+} // namespace detail
 
 } // namespace tiva
 

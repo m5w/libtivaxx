@@ -15,19 +15,21 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_FIELD_BASEFIELD_H
-#define TIVA_FIELD_BASEFIELD_H
+#ifndef TIVA_TYPE_BASEINTERVALNUMBER_H
+#define TIVA_TYPE_BASEINTERVALNUMBER_H
 
 namespace tiva {
 
 namespace detail {
 
-template <class FieldValueType> class BaseField {
-  using ValueType = FieldValueType;
+template <class IntervalNumberNumberType> class BaseIntervalNumber {
+  using NumberType = IntervalNumberNumberType;
+  using ValueType = NumberType;
   ValueType V;
 
 protected:
-  constexpr explicit BaseField(const ValueType FieldValue) : V(FieldValue) {}
+  constexpr explicit BaseIntervalNumber(const ValueType IntervalNumberValue)
+      : V(IntervalNumberValue) {}
 
 public:
   constexpr operator ValueType() const { return this->V; }
@@ -37,4 +39,4 @@ public:
 
 } // namespace tiva
 
-#endif // TIVA_FIELD_BASEFIELD_H
+#endif // TIVA_TYPE_BASEINTERVALNUMBER_H
