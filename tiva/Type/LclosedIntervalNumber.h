@@ -18,39 +18,44 @@
 #ifndef TIVA_TYPE_LCLOSEDINTERVALNUMBER_H
 #define TIVA_TYPE_LCLOSEDINTERVALNUMBER_H
 
-#include "tiva/Type/UNSAFE_LclosedIntervalNumber.h"
+#include "tiva/Type/BaseIntervalNumber.h"
 
 namespace tiva {
 
 namespace detail {
 
-template <class IntervalNumberNumberType,
-          IntervalNumberNumberType IntervalNumberIntervalLEndpoint,
-          IntervalNumberNumberType IntervalNumberIntervalREndpoint>
+template <class IntervalNumberValueType,
+          IntervalNumberValueType IntervalNumberIntervalLEndpoint,
+          IntervalNumberValueType IntervalNumberIntervalREndpoint>
+class LclosedIntervalNumber;
+
+template <class IntervalNumberValueType,
+          IntervalNumberValueType IntervalNumberIntervalLEndpoint,
+          IntervalNumberValueType IntervalNumberIntervalREndpoint>
 class LclosedIntervalNumber
-    : public UNSAFE_LclosedIntervalNumber<IntervalNumberNumberType,
-                                          IntervalNumberIntervalLEndpoint,
-                                          IntervalNumberIntervalREndpoint> {
+    : public BaseIntervalNumber<IntervalNumberValueType> {
 public:
-  using NumberType = IntervalNumberNumberType;
+  using ValueType = IntervalNumberValueType;
   static constexpr auto IntervalLEndpoint{IntervalNumberIntervalLEndpoint};
   static constexpr auto IntervalREndpoint{IntervalNumberIntervalREndpoint};
-  using ValueType = NumberType;
 
 private:
+  static_assert(IntervalLEndpoint < IntervalREndpoint);
   friend LclosedIntervalNumber<ValueType, IntervalLEndpoint + 1,
                                IntervalREndpoint>;
   friend LclosedIntervalNumber<ValueType, IntervalLEndpoint,
                                IntervalREndpoint - 1>;
-  using UNSAFE_LclosedIntervalNumberType =
-      UNSAFE_LclosedIntervalNumber<ValueType, IntervalLEndpoint,
-                                   IntervalREndpoint>;
 
-private:
-  using UNSAFE_LclosedIntervalNumberType::isValueValid;
+  static constexpr bool isValueValid(const ValueType IntervalNumberValue) {
+    return (IntervalNumberValue >= IntervalLEndpoint) &&
+           (IntervalNumberValue < IntervalREndpoint);
+  }
 
-  constexpr explicit LclosedIntervalNumber(const ValueType IntervalNumberValue)
-      : UNSAFE_LclosedIntervalNumberType(IntervalNumberValue) {}
+  using BaseIntervalNumberType = BaseIntervalNumber<ValueType>;
+
+  constexpr explicit LclosedIntervalNumber(
+      const ValueType IntervalNumberValue)
+      : BaseIntervalNumberType(IntervalNumberValue) {}
 
 public:
   template <ValueType IntervalNumberValue>

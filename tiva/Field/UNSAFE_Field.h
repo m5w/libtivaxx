@@ -28,11 +28,20 @@ namespace detail {
 
 template <class FieldValueType,
           typename FieldSize<FieldValueType>::ValueType FieldSizeValue>
+class UNSAFE_Field;
+
+template <class FieldValueType,
+          typename FieldSize<FieldValueType>::ValueType FieldSizeValue>
 class UNSAFE_Field : public BaseField<FieldValueType> {
   using ValueType = FieldValueType;
   static constexpr auto SizeValue{FieldSizeValue};
   static constexpr auto Size{FieldSize<ValueType>::template make<SizeValue>()};
   static constexpr auto Mask{getLsignificantBits<ValueType>(Size)};
+
+protected:
+  UNSAFE_Field() = default;
+
+private:
   using BaseFieldType = BaseField<ValueType>;
 
 protected:

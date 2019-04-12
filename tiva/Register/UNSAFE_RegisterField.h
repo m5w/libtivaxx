@@ -30,6 +30,12 @@ template <class RegisterFieldFieldType,
           typename RegisterBitNumber<
               typename RegisterFieldFieldType::ValueType>::ValueType
               RegisterFieldLsignificantRegisterBitNumberValue>
+class UNSAFE_RegisterField;
+
+template <class RegisterFieldFieldType,
+          typename RegisterBitNumber<
+              typename RegisterFieldFieldType::ValueType>::ValueType
+              RegisterFieldLsignificantRegisterBitNumberValue>
 class UNSAFE_RegisterField : public BaseRegisterField<RegisterFieldFieldType> {
   using FieldType = RegisterFieldFieldType;
   static constexpr auto LsignificantRegisterBitNumberValue{
@@ -43,19 +49,23 @@ class UNSAFE_RegisterField : public BaseRegisterField<RegisterFieldFieldType> {
        getMsignificantBits<ValueType>(LsignificantRegisterBitNumber)) == 0);
   static constexpr auto Mask{FieldType::getMask()
                              << LsignificantRegisterBitNumber};
+
+protected:
+  UNSAFE_RegisterField() = default;
+
+private:
   using BaseRegisterFieldType = BaseRegisterField<FieldType>;
 
 protected:
-  static constexpr auto getMask() { return Mask; }
-
-  constexpr explicit UNSAFE_RegisterField() = default;
-
   constexpr explicit UNSAFE_RegisterField(const ValueType RegisterFieldValue)
       : BaseRegisterFieldType(RegisterFieldValue) {}
 
   constexpr explicit UNSAFE_RegisterField(const FieldType RegisterFieldField)
       : BaseRegisterFieldType(RegisterFieldField
                               << LsignificantRegisterBitNumber) {}
+
+public:
+  static constexpr auto getMask() { return Mask; }
 };
 
 } // namespace detail

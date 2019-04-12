@@ -22,15 +22,28 @@ namespace tiva {
 
 namespace detail {
 
+template <class FieldValueType> class BaseField;
+
+template <class FieldValueType>
+constexpr bool operator==(const BaseField<FieldValueType> &LhandSide,
+                          const BaseField<FieldValueType> &RhandSide) {
+  return LhandSide.V == RhandSide.V;
+}
+
 template <class FieldValueType> class BaseField {
   using ValueType = FieldValueType;
   ValueType V;
 
 protected:
+  BaseField() = default;
+
   constexpr explicit BaseField(const ValueType FieldValue) : V(FieldValue) {}
 
 public:
   constexpr operator ValueType() const { return this->V; }
+
+  friend constexpr bool operator==
+      <>(const BaseField &LhandSide, const BaseField &RhandSide);
 };
 
 } // namespace detail

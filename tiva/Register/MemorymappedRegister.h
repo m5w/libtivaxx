@@ -25,24 +25,23 @@ namespace tiva {
 template <class RegisterValueType> class MemorymappedRegister;
 
 template <class RegisterValueType>
-bool operator==(const MemorymappedRegister<RegisterValueType> &LhandSide,
-                const MemorymappedRegister<RegisterValueType> &RhandSide) {
+constexpr bool
+operator==(const MemorymappedRegister<RegisterValueType> &LhandSide,
+           const MemorymappedRegister<RegisterValueType> &RhandSide) {
   return LhandSide.Address == RhandSide.Address;
 }
 
 template <class RegisterValueType> class MemorymappedRegister {
-public:
+private:
   using ValueType = RegisterValueType;
-
-protected:
   std::uint32_t Address;
 
 public:
-  constexpr MemorymappedRegister(const std::uint32_t RegisterAddress)
+  constexpr explicit MemorymappedRegister(const std::uint32_t RegisterAddress)
       : Address(RegisterAddress) {}
 
-  friend bool operator==<>(const MemorymappedRegister &LhandSide,
-                           const MemorymappedRegister &RhandSide);
+  friend constexpr bool operator==<>(const MemorymappedRegister &LhandSide,
+                                     const MemorymappedRegister &RhandSide);
 
   auto read() const {
     return *reinterpret_cast<const volatile ValueType *>(this->Address);

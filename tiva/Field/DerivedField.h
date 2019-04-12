@@ -23,13 +23,21 @@
 namespace tiva {
 
 template <class FieldFieldType, class FieldIsValueValidType>
+class DerivedField;
+
+template <class FieldFieldType, class FieldIsValueValidType>
 class DerivedField
     : public detail::UNSAFE_Field<typename FieldFieldType::ValueType,
                                   FieldFieldType::SizeValue> {
 public:
   using FieldType = FieldFieldType;
   using IsValueValidType = FieldIsValueValidType;
-  using ValueType = typename FieldType::ValueType;
+
+private:
+  using FieldValueType = typename FieldType::ValueType;
+
+public:
+  using ValueType = FieldValueType;
 
 private:
   using UNSAFE_FieldType =
@@ -39,21 +47,18 @@ private:
       : UNSAFE_FieldType(FieldField) {}
 
 public:
-  using UNSAFE_FieldType::getMask;
-
-  static constexpr bool isValueValid(const ValueType FieldFieldValue) {
+  static constexpr bool isValueValid(const ValueType FieldValue) {
     constexpr IsValueValidType IsValueValid;
-    return FieldType::isValueValid(FieldFieldValue) &&
-           IsValueValid(FieldFieldValue);
+    return FieldType::isValueValid(FieldValue) && IsValueValid(FieldValue);
   }
 
-  template <ValueType FieldFieldValue> static constexpr DerivedField make() {
-    static_assert(isValueValid(FieldFieldValue));
-    return DerivedField(FieldType::template make<FieldFieldValue>());
+  template <ValueType FieldValue> static constexpr DerivedField make() {
+    static_assert(isValueValid(FieldValue));
+    return DerivedField(FieldType::template make<FieldValue>());
   }
 
-  static DerivedField UNSAFE_make(const ValueType FieldFieldValue) {
-    return DerivedField(FieldType::UNSAFE_make(FieldFieldValue));
+  static DerivedField UNSAFE_make(const ValueType FieldValue) {
+    return DerivedField(FieldType::UNSAFE_make(FieldValue));
   }
 };
 

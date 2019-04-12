@@ -22,6 +22,15 @@ namespace tiva {
 
 namespace detail {
 
+template <class RegisterFieldFieldType> class BaseRegisterField;
+
+template <class RegisterFieldFieldType>
+constexpr bool
+operator==(const BaseRegisterField<RegisterFieldFieldType> &LhandSide,
+           const BaseRegisterField<RegisterFieldFieldType> &RhandSide) {
+  return LhandSide.V == RhandSide.V;
+}
+
 template <class RegisterFieldFieldType> class BaseRegisterField {
   using FieldType = RegisterFieldFieldType;
   using FieldValueType = typename FieldType::ValueType;
@@ -29,13 +38,16 @@ template <class RegisterFieldFieldType> class BaseRegisterField {
   ValueType V;
 
 protected:
-  constexpr explicit BaseRegisterField() = default;
+  BaseRegisterField() = default;
 
   constexpr explicit BaseRegisterField(const ValueType RegisterFieldValue)
       : V(RegisterFieldValue) {}
 
 public:
   constexpr operator ValueType() const { return this->V; }
+
+  friend constexpr bool operator==<>(const BaseRegisterField &LhandSide,
+                                     const BaseRegisterField &RhandSide);
 };
 
 } // namespace detail

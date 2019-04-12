@@ -22,17 +22,30 @@ namespace tiva {
 
 namespace detail {
 
-template <class IntervalNumberNumberType> class BaseIntervalNumber {
-  using NumberType = IntervalNumberNumberType;
-  using ValueType = NumberType;
+template <class IntervalNumberValueType> class BaseIntervalNumber;
+
+template <class IntervalNumberValueType>
+constexpr bool
+operator==(const BaseIntervalNumber<IntervalNumberValueType> &LhandSide,
+           const BaseIntervalNumber<IntervalNumberValueType> &RhandSide) {
+  return LhandSide.V == RhandSide.V;
+}
+
+template <class IntervalNumberValueType> class BaseIntervalNumber {
+  using ValueType = IntervalNumberValueType;
   ValueType V;
 
 protected:
+  BaseIntervalNumber() = default;
+
   constexpr explicit BaseIntervalNumber(const ValueType IntervalNumberValue)
       : V(IntervalNumberValue) {}
 
 public:
   constexpr operator ValueType() const { return this->V; }
+
+  friend constexpr bool operator==<>(const BaseIntervalNumber &LhandSide,
+                                     const BaseIntervalNumber &RhandSide);
 };
 
 } // namespace detail

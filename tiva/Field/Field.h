@@ -24,6 +24,10 @@ namespace tiva {
 
 template <class FieldValueType,
           typename detail::FieldSize<FieldValueType>::ValueType FieldSizeValue>
+class Field;
+
+template <class FieldValueType,
+          typename detail::FieldSize<FieldValueType>::ValueType FieldSizeValue>
 class Field : public detail::UNSAFE_Field<FieldValueType, FieldSizeValue> {
 public:
   using ValueType = FieldValueType;
