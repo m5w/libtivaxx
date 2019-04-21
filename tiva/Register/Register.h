@@ -462,7 +462,8 @@ public:
   void write() const {
     RegisterValueType RegisterValue;
 
-    if constexpr (!MightAllFieldsBeWritten)
+    if constexpr (IsRegisterReadable<RegisterType>::value &&
+                  !MightAllFieldsBeWritten)
       RegisterValue = this->R.read();
     else
       RegisterValue = RegisterResetValue;
