@@ -50,19 +50,6 @@ class ReadRRegisterFieldsge0;
 template <class RRegisterFieldsRegisterType,
           class RRegisterFieldsReadRRegisterFieldsType,
           class RRegisterFieldsFieldType>
-inline bool
-operator==(const RRegisterFields<RRegisterFieldsRegisterType,
-                                 RRegisterFieldsReadRRegisterFieldsType,
-                                 RRegisterFieldsFieldType> &LhandSide,
-           const RRegisterFields<RRegisterFieldsRegisterType,
-                                 RRegisterFieldsReadRRegisterFieldsType,
-                                 RRegisterFieldsFieldType> &RhandSide) {
-  return LhandSide.R == RhandSide.R;
-}
-
-template <class RRegisterFieldsRegisterType,
-          class RRegisterFieldsReadRRegisterFieldsType,
-          class RRegisterFieldsFieldType>
 class RRegisterFields<RRegisterFieldsRegisterType,
                       RRegisterFieldsReadRRegisterFieldsType,
                       RRegisterFieldsFieldType> {
@@ -76,9 +63,9 @@ protected:
   explicit RRegisterFields(const RegisterType &RRegisterFieldsRegister)
       : R(RRegisterFieldsRegister) {}
 
-public:
-  friend bool operator==
-      <>(const RRegisterFields &LhandSide, const RRegisterFields &RhandSide);
+  bool operator==(const RRegisterFields &RhandSide) const {
+    return this->R == RhandSide.R;
+  }
 
 private:
   using FieldReadRegisterFieldType = typename FieldType::ReadRegisterFieldType;
@@ -147,21 +134,11 @@ public:
 
   explicit RRegisterFieldsge0(const RegisterType &RRegisterFieldsRegister)
       : RRegisterFieldsType(RRegisterFieldsRegister) {}
-};
 
-template <class ReadRRegisterFieldsRegisterType,
-          class ReadRRegisterFieldsReadRRegisterFieldsType,
-          class ReadRRegisterFieldsFieldType>
-inline bool operator==(
-    const ReadRRegisterFields<ReadRRegisterFieldsRegisterType,
-                              ReadRRegisterFieldsReadRRegisterFieldsType,
-                              ReadRRegisterFieldsFieldType> &LhandSide,
-    const ReadRRegisterFields<ReadRRegisterFieldsRegisterType,
-                              ReadRRegisterFieldsReadRRegisterFieldsType,
-                              ReadRRegisterFieldsFieldType> &RhandSide) {
-  return (LhandSide.R == RhandSide.R) &&
-         (LhandSide.RegisterValue == RhandSide.RegisterValue);
-}
+  bool operator==(const RRegisterFieldsge0 &RhandSide) const {
+    return RRegisterFieldsType::operator==(RhandSide);
+  }
+};
 
 template <class ReadRRegisterFieldsRegisterType,
           class ReadRRegisterFieldsReadRRegisterFieldsType,
@@ -187,9 +164,10 @@ protected:
       : R(ReadRRegisterFieldsRegister),
         RegisterValue(ReadRRegisterFieldsRegisterValue) {}
 
-public:
-  friend bool operator==<>(const ReadRRegisterFields &LhandSide,
-                           const ReadRRegisterFields &RhandSide);
+  bool operator==(const ReadRRegisterFields &RhandSide) const {
+    return (this->R == RhandSide.R) &&
+           (this->RegisterValue == RhandSide.RegisterValue);
+  }
 
 private:
   using FieldReadRegisterFieldType = typename FieldType::ReadRegisterFieldType;
@@ -239,37 +217,6 @@ public:
 template <class ReadRRegisterFieldsRegisterType,
           class ReadRRegisterFieldsReadWRegisterFieldsType,
           class... ReadRRegisterFieldsFieldsTypes>
-bool operator==(
-    const ReadRRegisterFieldsge0<ReadRRegisterFieldsRegisterType,
-                                 ReadRRegisterFieldsReadWRegisterFieldsType,
-                                 ReadRRegisterFieldsFieldsTypes...> &LhandSide,
-    const ReadRRegisterFieldsge0<ReadRRegisterFieldsRegisterType,
-                                 ReadRRegisterFieldsReadWRegisterFieldsType,
-                                 ReadRRegisterFieldsFieldsTypes...>
-        &RhandSide) {
-  return (static_cast<const ReadRRegisterFieldsReadWRegisterFieldsType &>(
-              LhandSide) ==
-          static_cast<const ReadRRegisterFieldsReadWRegisterFieldsType &>(
-              RhandSide)) &&
-         (static_cast<const ReadRRegisterFields<
-              ReadRRegisterFieldsRegisterType,
-              ReadRRegisterFieldsge0<
-                  ReadRRegisterFieldsRegisterType,
-                  ReadRRegisterFieldsReadWRegisterFieldsType,
-                  ReadRRegisterFieldsFieldsTypes...>,
-              ReadRRegisterFieldsFieldsTypes...> &>(LhandSide) ==
-          static_cast<const ReadRRegisterFields<
-              ReadRRegisterFieldsRegisterType,
-              ReadRRegisterFieldsge0<
-                  ReadRRegisterFieldsRegisterType,
-                  ReadRRegisterFieldsReadWRegisterFieldsType,
-                  ReadRRegisterFieldsFieldsTypes...>,
-              ReadRRegisterFieldsFieldsTypes...> &>(RhandSide));
-}
-
-template <class ReadRRegisterFieldsRegisterType,
-          class ReadRRegisterFieldsReadWRegisterFieldsType,
-          class... ReadRRegisterFieldsFieldsTypes>
 class ReadRRegisterFieldsge0
     : public ReadRRegisterFieldsReadWRegisterFieldsType,
       public ReadRRegisterFields<
@@ -301,6 +248,12 @@ public:
                                 ReadRRegisterFieldsRegisterValue),
         ReadRRegisterFieldsType(ReadRRegisterFieldsRegister,
                                 ReadRRegisterFieldsRegisterValue) {}
+
+  bool operator==(const ReadRRegisterFieldsge0 &RhandSide) const {
+    return (*static_cast<const ReadWRegisterFieldsType *>(this) ==
+            static_cast<const ReadWRegisterFieldsType &>(RhandSide)) &&
+           ReadRRegisterFieldsType::operator==(RhandSide);
+  }
 };
 
 template <class WRegisterFieldsRegisterType,
