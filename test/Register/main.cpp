@@ -97,6 +97,7 @@ extern "C" void main() {
     assert(N0F == 0x00'00'00'00u);
     return R01RRRF;
   }() == Register01ReadRRegisterFields);
+  assert(A == 0x00'00'00'00u);
 
   // ## 1-Field Paths
   // * 0
@@ -130,17 +131,55 @@ extern "C" void main() {
   }()};
   assert(A == 0xff'ff'ff'ffu);
   assert([&] {
+    Nibble1Field::ReadRegisterFieldType N1F(0x00'00'00'00u);
+    const auto &R10RRRF{Register10.read(N1F)};
+    assert(N1F == 0x00'00'00'f0u);
+    return R10RRRF;
+  }() == Register10ReadRRegisterFields);
+  assert(A == 0xff'ff'ff'ffu);
+  assert([&] {
     Nibble0Field::ReadRegisterFieldType N0F(0x00'00'00'00u);
     const auto &R10RRRF{Register10ReadRRegisterFields.read(N0F)};
     assert(N0F == 0x00'00'00'0fu);
     return R10RRRF;
   }() == Register10ReadRRegisterFields);
+  assert(A == 0xff'ff'ff'ffu);
   assert([&] {
     Nibble1Field::ReadRegisterFieldType N1F(0x00'00'00'00u);
     const auto &R10RRRF{Register10ReadRRegisterFields.read(N1F)};
     assert(N1F == 0x00'00'00'f0u);
     return R10RRRF;
   }() == Register10ReadRRegisterFields);
+  assert(A == 0xff'ff'ff'ffu);
+  A = 0x00'00'00'00u;
+  const auto &Register11ReadRRegisterFields{[&] {
+    Nibble0Field::ReadRegisterFieldType N0F(0x00'00'00'0fu);
+    const auto &R11RRRF{Register11.read(N0F)};
+    assert(N0F == 0x00'00'00'00u);
+    return R11RRRF;
+  }()};
+  assert(A == 0x00'00'00'00u);
+  assert([&] {
+    Nibble1Field::ReadRegisterFieldType N1F(0x00'00'00'f0u);
+    const auto &R11RRRF{Register11.read(N1F)};
+    assert(N1F == 0x00'00'00'00u);
+    return R11RRRF;
+  }() == Register11ReadRRegisterFields);
+  assert(A == 0x00'00'00'00u);
+  assert([&] {
+    Nibble0Field::ReadRegisterFieldType N0F(0x00'00'00'0fu);
+    const auto &R11RRRF{Register11ReadRRegisterFields.read(N0F)};
+    assert(N0F == 0x00'00'00'00u);
+    return R11RRRF;
+  }() == Register11ReadRRegisterFields);
+  assert(A == 0x00'00'00'00u);
+  assert([&] {
+    Nibble1Field::ReadRegisterFieldType N1F(0x00'00'00'f0u);
+    const auto &R11RRRF{Register11ReadRRegisterFields.read(N1F)};
+    assert(N1F == 0x00'00'00'00u);
+    return R11RRRF;
+  }() == Register11ReadRRegisterFields);
+  assert(A == 0x00'00'00'00u);
 
   // ## 1-Field Paths
   // * 0
