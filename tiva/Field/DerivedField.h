@@ -18,11 +18,13 @@
 #ifndef TIVA_FIELD_DERIVEDFIELD_H
 #define TIVA_FIELD_DERIVEDFIELD_H
 
+#include "tiva/Field/FieldIsValueValid.h"
 #include "tiva/Field/UNSAFE_Field.h"
 
 namespace tiva {
 
-template <class FieldFieldType, class FieldIsValueValidType>
+template <class FieldFieldType, class FieldIsValueValidType =
+                                    detail::FieldIsValueValid<FieldFieldType>>
 class DerivedField;
 
 template <class FieldFieldType, class FieldIsValueValidType>

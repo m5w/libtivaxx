@@ -24,21 +24,7 @@
 #include <tiva/Register/Register.h>
 #include <tiva/Register/RegisterField.h>
 
-namespace NibbleField {
-
-class IsValueValid {
-public:
-  constexpr IsValueValid() = default;
-
-  constexpr bool operator()(const std::uint32_t FieldValue) const {
-    return true;
-  }
-};
-
-using FieldType =
-    tiva::DerivedField<tiva::Field<std::uint32_t, 0x04>, IsValueValid>;
-
-} // namespace NibbleField
+using NibbleField = tiva::DerivedField<tiva::Field<std::uint32_t, 0x04>>;
 
 using Nibble0Field = tiva::RegisterField<NibbleField::FieldType, 0x00>;
 using Nibble1Field = tiva::RegisterField<NibbleField::FieldType, 0x04>;
