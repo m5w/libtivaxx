@@ -32,8 +32,10 @@ operator==(const MemorymappedRegister<RegisterValueType> &LhandSide,
 }
 
 template <class RegisterValueType> class MemorymappedRegister {
-private:
+public:
   using ValueType = RegisterValueType;
+
+private:
   std::uint32_t Address;
 
 public:
