@@ -18,6 +18,9 @@
 #ifndef TIVA_REGISTER_REGISTER_H
 #define TIVA_REGISTER_REGISTER_H
 
+#include <type_traits>
+#include <utility>
+
 #include "tiva/Register/RegisterBitNumber.h"
 #include "tiva/Register/UNSAFE_RegisterField.h"
 
@@ -307,6 +310,8 @@ template <class WRegisterFieldsRegisterType,
           class WRegisterFieldsFieldType,
           class... WRegisterFieldsFieldTypesgep1Types>
 class WRegisterFields;
+template <class IsRegisterReadableRegisterType, class = void>
+class IsRegisterReadable;
 template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
           typename WriteRegisterType::ValueType WriteRegisterResetValue,
           class WriteWriteType>
@@ -426,6 +431,15 @@ public:
     return WriteField0WRegisterFieldsType(this->R, F);
   }
 };
+
+template <class IsRegisterReadableRegisterType, class>
+class IsRegisterReadable : public std::false_type {};
+
+template <class IsRegisterReadableRegisterType>
+class IsRegisterReadable<
+    IsRegisterReadableRegisterType,
+    decltype(std::declval<IsRegisterReadableRegisterType>().read(), void())>
+    : public std::true_type {};
 
 template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
           typename WriteRegisterType::ValueType WriteRegisterResetValue,
