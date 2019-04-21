@@ -78,7 +78,7 @@ extern "C" void main() {
   assert(A == 0xff'ff'ff'ffu);
   assert([&] {
     Nibble0Field::ReadRegisterFieldType N0F(0x00'00'00'00u);
-    const auto &R00RRRF{Register00.read(N0F)};
+    const auto &R00RRRF{Register00ReadRRegisterFields.read(N0F)};
     assert(N0F == 0x00'00'00'0fu);
     return R00RRRF;
   }() == Register00ReadRRegisterFields);
@@ -93,7 +93,7 @@ extern "C" void main() {
   assert(A == 0x00'00'00'00u);
   assert([&] {
     Nibble0Field::ReadRegisterFieldType N0F(0x00'00'00'0fu);
-    const auto &R01RRRF{Register01.read(N0F)};
+    const auto &R01RRRF{Register01ReadRRegisterFields.read(N0F)};
     assert(N0F == 0x00'00'00'00u);
     return R01RRRF;
   }() == Register01ReadRRegisterFields);
@@ -120,6 +120,27 @@ extern "C" void main() {
   assert(A == 0xff'ff'ff'f0u);
 
   // # 2-Field Register
+
+  A = 0xff'ff'ff'ffu;
+  const auto &Register10ReadRRegisterFields{[&] {
+    Nibble0Field::ReadRegisterFieldType N0F(0x00'00'00'00u);
+    const auto &R10RRRF{Register10.read(N0F)};
+    assert(N0F == 0x00'00'00'0fu);
+    return R10RRRF;
+  }()};
+  assert(A == 0xff'ff'ff'ffu);
+  assert([&] {
+    Nibble0Field::ReadRegisterFieldType N0F(0x00'00'00'00u);
+    const auto &R10RRRF{Register10ReadRRegisterFields.read(N0F)};
+    assert(N0F == 0x00'00'00'0fu);
+    return R10RRRF;
+  }() == Register10ReadRRegisterFields);
+  assert([&] {
+    Nibble1Field::ReadRegisterFieldType N1F(0x00'00'00'00u);
+    const auto &R10RRRF{Register10ReadRRegisterFields.read(N1F)};
+    assert(N1F == 0x00'00'00'f0u);
+    return R10RRRF;
+  }() == Register10ReadRRegisterFields);
 
   // ## 1-Field Paths
   // * 0
