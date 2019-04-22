@@ -28,13 +28,16 @@ aclocal_DATA = \
 lib_LIBRARIES = \
 	libtiva++.a
 
-libtiva___a_SOURCES =
+libtiva___a_SOURCES = \
+	tiva/SystemControl/GpioPort.cpp \
+	tiva/SystemControl/Registers.cpp
 
 libtiva___a_includedir = $(includedir)
 
 nobase_libtiva___a_include_HEADERS = \
 	tiva/Field/BaseField.h \
 	tiva/Field/DerivedField.h \
+	tiva/Field/EnumeratedField.h \
 	tiva/Field/Field.h \
 	tiva/Field/FieldIsValueValid.h \
 	tiva/Field/FieldSize.h \
@@ -51,6 +54,9 @@ nobase_libtiva___a_include_HEADERS = \
 	tiva/Register/UNSAFE_RegisterField.h \
 	tiva/Register/WoMemorymappedRegister.h \
 	tiva/Register/WriteableMemorymappedRegister.h \
+	tiva/SystemControl/GpioPort.h \
+	tiva/SystemControl/Registers.h \
+	tiva/SystemControl/RunModeClockGatingControlField.h \
 	tiva/Type/BaseIntervalNumber.h \
 	tiva/Type/LclosedIntervalNumber.h \
 	tiva/Type/getLsignificantBits.h \
