@@ -15,19 +15,41 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "tiva/SystemControl/GpioPort.h"
+#ifndef TIVA_GPIO_ALTERNATEFUNCTIONSELECTFIELD_H
+#define TIVA_GPIO_ALTERNATEFUNCTIONSELECTFIELD_H
+
+#include <cstdint>
+
+#include "tiva/Field/EnumeratedField.h"
+#include "tiva/Field/Field.h"
 
 namespace tiva {
 
 namespace detail {
 
-template class GpioPort<GpioPortFRunModeClockGatingControl>;
-template class GpioPort<GpioPortERunModeClockGatingControl>;
-template class GpioPort<GpioPortDRunModeClockGatingControl>;
-template class GpioPort<GpioPortCRunModeClockGatingControl>;
-template class GpioPort<GpioPortBRunModeClockGatingControl>;
-template class GpioPort<GpioPortARunModeClockGatingControl>;
+class AlternateFunctionSelectField
+    : public EnumeratedField<Field<std::uint32_t, 1>> {
+public:
+  using FieldType = Field<std::uint32_t, 1>;
+
+private:
+  using EnumeratedFieldType = EnumeratedField<FieldType>;
+
+  constexpr explicit AlternateFunctionSelectField(const FieldType FieldField)
+      : EnumeratedFieldType(FieldField) {}
+
+public:
+  static constexpr auto Gpio() {
+    return AlternateFunctionSelectField(FieldType::make<0>());
+  }
+
+  static constexpr auto AlternateFunction() {
+    return AlternateFunctionSelectField(FieldType::make<1>());
+  }
+};
 
 } // namespace detail
 
 } // namespace tiva
+
+#endif // TIVA_GPIO_ALTERNATEFUNCTIONSELECTFIELD_H

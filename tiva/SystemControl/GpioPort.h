@@ -32,16 +32,16 @@ template <class GpioPortGpioPortRunModeClockGatingControlType> class GpioPort {
 
 public:
   GpioPort() {
-    detail::Rcgcgpio
+    Rcgcgpio
         .write(GpioPortRunModeClockGatingControlType::template make<
-               detail::RunModeClockGatingControlField::ENABLED()>())
+               RunModeClockGatingControlField::Enabled()>())
         .write();
   }
 
   ~GpioPort() {
-    detail::Rcgcgpio
+    Rcgcgpio
         .write(GpioPortRunModeClockGatingControlType::template make<
-               detail::RunModeClockGatingControlField::DISABLED()>())
+               RunModeClockGatingControlField::Disabled()>())
         .write();
   }
 };

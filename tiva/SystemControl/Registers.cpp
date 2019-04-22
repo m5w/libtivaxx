@@ -21,12 +21,12 @@ namespace tiva {
 
 namespace detail {
 
-tiva::Register<
-    tiva::RwMemorymappedRegister<std::uint32_t>, 0x0000'0000,
+Register<
+    RwMemorymappedRegister<std::uint32_t>, 0x0000'0000,
     GpioPortFRunModeClockGatingControl, GpioPortERunModeClockGatingControl,
     GpioPortDRunModeClockGatingControl, GpioPortCRunModeClockGatingControl,
     GpioPortBRunModeClockGatingControl, GpioPortARunModeClockGatingControl>
-    Rcgcgpio(tiva::RwMemorymappedRegister<std::uint32_t>(0x400F'E000 + 0x608));
+    Rcgcgpio(RwMemorymappedRegister<std::uint32_t>(0x400F'E000 + 0x608));
 
 } // namespace detail
 

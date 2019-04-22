@@ -28,9 +28,9 @@ namespace tiva {
 namespace detail {
 
 class RunModeClockGatingControlField
-    : public EnumeratedField<tiva::Field<std::uint32_t, 1>> {
+    : public EnumeratedField<Field<std::uint32_t, 1>> {
 public:
-  using FieldType = tiva::Field<std::uint32_t, 1>;
+  using FieldType = Field<std::uint32_t, 1>;
 
 private:
   using EnumeratedFieldType = EnumeratedField<FieldType>;
@@ -39,11 +39,11 @@ private:
       : EnumeratedFieldType(FieldField) {}
 
 public:
-  static constexpr auto DISABLED() {
+  static constexpr auto Disabled() {
     return RunModeClockGatingControlField(FieldType::make<0>());
   }
 
-  static constexpr auto ENABLED() {
+  static constexpr auto Enabled() {
     return RunModeClockGatingControlField(FieldType::make<1>());
   }
 };

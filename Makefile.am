@@ -29,6 +29,7 @@ lib_LIBRARIES = \
 	libtiva++.a
 
 libtiva___a_SOURCES = \
+	tiva/Gpio/Registers.cpp \
 	tiva/SystemControl/GpioPort.cpp \
 	tiva/SystemControl/Registers.cpp
 
@@ -42,6 +43,9 @@ nobase_libtiva___a_include_HEADERS = \
 	tiva/Field/FieldIsValueValid.h \
 	tiva/Field/FieldSize.h \
 	tiva/Field/UNSAFE_Field.h \
+	tiva/Gpio/AlternateFunctionSelectField.h \
+	tiva/Gpio/PortMuxControlField.h \
+	tiva/Gpio/Registers.h \
 	tiva/Register/BaseRegisterField.h \
 	tiva/Register/MemorymappedRegister.h \
 	tiva/Register/ReadRegisterField.h \

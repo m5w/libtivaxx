@@ -28,9 +28,9 @@ namespace tiva {
 namespace detail {
 
 class Pb0PortMuxControlField
-    : public EnumeratedField<tiva::Field<std::uint32_t, 4>> {
+    : public EnumeratedField<Field<std::uint32_t, 4>> {
 public:
-  using FieldType = tiva::Field<std::uint32_t, 4>;
+  using FieldType = Field<std::uint32_t, 4>;
 
 private:
   using EnumeratedFieldType = EnumeratedField<FieldType>;
@@ -53,9 +53,9 @@ public:
 };
 
 class Pb1PortMuxControlField
-    : public EnumeratedField<tiva::Field<std::uint32_t, 4>> {
+    : public EnumeratedField<Field<std::uint32_t, 4>> {
 public:
-  using FieldType = tiva::Field<std::uint32_t, 4>;
+  using FieldType = Field<std::uint32_t, 4>;
 
 private:
   using EnumeratedFieldType = EnumeratedField<FieldType>;
@@ -78,9 +78,9 @@ public:
 };
 
 class Pb2PortMuxControlField
-    : public EnumeratedField<tiva::Field<std::uint32_t, 4>> {
+    : public EnumeratedField<Field<std::uint32_t, 4>> {
 public:
-  using FieldType = tiva::Field<std::uint32_t, 4>;
+  using FieldType = Field<std::uint32_t, 4>;
 
 private:
   using EnumeratedFieldType = EnumeratedField<FieldType>;
@@ -99,9 +99,9 @@ public:
 };
 
 class Pb3PortMuxControlField
-    : public EnumeratedField<tiva::Field<std::uint32_t, 4>> {
+    : public EnumeratedField<Field<std::uint32_t, 4>> {
 public:
-  using FieldType = tiva::Field<std::uint32_t, 4>;
+  using FieldType = Field<std::uint32_t, 4>;
 
 private:
   using EnumeratedFieldType = EnumeratedField<FieldType>;
@@ -120,9 +120,9 @@ public:
 };
 
 class Pb4PortMuxControlField
-    : public EnumeratedField<tiva::Field<std::uint32_t, 4>> {
+    : public EnumeratedField<Field<std::uint32_t, 4>> {
 public:
-  using FieldType = tiva::Field<std::uint32_t, 4>;
+  using FieldType = Field<std::uint32_t, 4>;
 
 private:
   using EnumeratedFieldType = EnumeratedField<FieldType>;
@@ -153,9 +153,9 @@ public:
 };
 
 class Pb5PortMuxControlField
-    : public EnumeratedField<tiva::Field<std::uint32_t, 4>> {
+    : public EnumeratedField<Field<std::uint32_t, 4>> {
 public:
-  using FieldType = tiva::Field<std::uint32_t, 4>;
+  using FieldType = Field<std::uint32_t, 4>;
 
 private:
   using EnumeratedFieldType = EnumeratedField<FieldType>;
@@ -186,9 +186,9 @@ public:
 };
 
 class Pb6PortMuxControlField
-    : public EnumeratedField<tiva::Field<std::uint32_t, 4>> {
+    : public EnumeratedField<Field<std::uint32_t, 4>> {
 public:
-  using FieldType = tiva::Field<std::uint32_t, 4>;
+  using FieldType = Field<std::uint32_t, 4>;
 
 private:
   using EnumeratedFieldType = EnumeratedField<FieldType>;
@@ -211,9 +211,9 @@ public:
 };
 
 class Pb7PortMuxControlField
-    : public EnumeratedField<tiva::Field<std::uint32_t, 4>> {
+    : public EnumeratedField<Field<std::uint32_t, 4>> {
 public:
-  using FieldType = tiva::Field<std::uint32_t, 4>;
+  using FieldType = Field<std::uint32_t, 4>;
 
 private:
   using EnumeratedFieldType = EnumeratedField<FieldType>;
