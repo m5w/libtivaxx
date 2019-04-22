@@ -15,34 +15,36 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_REGISTER_MEMORYMAPPEDREGISTER_H
-#define TIVA_REGISTER_MEMORYMAPPEDREGISTER_H
+#ifndef TIVA_REGISTER_ROMEMORYMAPPEDREGISTER_H
+#define TIVA_REGISTER_ROMEMORYMAPPEDREGISTER_H
 
 #include <cstdint>
 
+#include "tiva/Register/ReadableMemorymappedRegister.h"
+
 namespace tiva {
 
-namespace detail {
-
-template <class RegisterValueType> class MemorymappedRegister;
-
-template <class RegisterValueType> class MemorymappedRegister {
+template <class RegisterValueType>
+class RoMemorymappedRegister
+    : public detail::ReadableMemorymappedRegister<RegisterValueType> {
+public:
   using ValueType = RegisterValueType;
 
-protected:
-  const std::uint32_t Address;
-
-  constexpr bool operator==(const MemorymappedRegister &RhandSide) const {
-    return this->Address == RhandSide.Address;
-  }
+private:
+  using ReadableMemorymappedRegisterType =
+      detail::ReadableMemorymappedRegister<ValueType>;
 
 public:
-  constexpr explicit MemorymappedRegister(const std::uint32_t RegisterAddress)
-      : Address(RegisterAddress) {}
-};
+  constexpr explicit RoMemorymappedRegister(
+      const std::uint32_t RegisterAddress)
+      : ReadableMemorymappedRegisterType(RegisterAddress) {}
 
-} // namespace detail
+  constexpr bool operator==(const RoMemorymappedRegister &RhandSide) const {
+    return ReadableMemorymappedRegisterType::operator==(
+        static_cast<const ReadableMemorymappedRegisterType &>(RhandSide));
+  }
+};
 
 } // namespace tiva
 
-#endif // TIVA_REGISTER_MEMORYMAPPEDREGISTER_H
+#endif // TIVA_REGISTER_ROMEMORYMAPPEDREGISTER_H

@@ -15,47 +15,45 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_FIELD_FIELD_H
-#define TIVA_FIELD_FIELD_H
+#ifndef TIVA_FIELD_UNSAFE_FIELD_H
+#define TIVA_FIELD_UNSAFE_FIELD_H
 
-#include "tiva/Field/UNSAFE_Field.h"
+#include "tiva/Field/BaseField.h"
+#include "tiva/Field/FieldSize.h"
+#include "tiva/Type/getLsignificantBits.h"
 
 namespace tiva {
 
-template <class FieldValueType,
-          typename detail::FieldSize<FieldValueType>::ValueType FieldSizeValue>
-class Field;
+namespace detail {
 
 template <class FieldValueType,
-          typename detail::FieldSize<FieldValueType>::ValueType FieldSizeValue>
-class Field : public detail::UNSAFE_Field<FieldValueType, FieldSizeValue> {
-public:
+          typename FieldSize<FieldValueType>::ValueType FieldSizeValue>
+class UNSAFE_Field;
+
+template <class FieldValueType,
+          typename FieldSize<FieldValueType>::ValueType FieldSizeValue>
+class UNSAFE_Field : public BaseField<FieldValueType> {
   using ValueType = FieldValueType;
   static constexpr auto SizeValue{FieldSizeValue};
+  static constexpr auto Size{FieldSize<ValueType>::template make<SizeValue>()};
+  static constexpr auto Mask{getLsignificantBits<ValueType>(Size)};
+
+protected:
+  UNSAFE_Field() = default;
 
 private:
-  using UNSAFE_FieldType = detail::UNSAFE_Field<ValueType, SizeValue>;
+  using BaseFieldType = BaseField<ValueType>;
 
-  constexpr explicit Field(const ValueType FieldValue)
-      : UNSAFE_FieldType(FieldValue) {}
+protected:
+  constexpr explicit UNSAFE_Field(const ValueType FieldValue)
+      : BaseFieldType(FieldValue) {}
 
 public:
-  using UNSAFE_FieldType::getMask;
-
-  static constexpr bool isValueValid(const ValueType FieldValue) {
-    return (FieldValue & getMask()) == FieldValue;
-  }
-
-  template <ValueType FieldValue> static constexpr Field make() {
-    static_assert(isValueValid(FieldValue));
-    return Field(FieldValue);
-  }
-
-  static Field UNSAFE_make(const ValueType FieldValue) {
-    return Field(FieldValue);
-  }
+  static constexpr auto getMask() { return Mask; }
 };
+
+} // namespace detail
 
 } // namespace tiva
 
-#endif // TIVA_FIELD_FIELD_H
+#endif // TIVA_FIELD_UNSAFE_FIELD_H

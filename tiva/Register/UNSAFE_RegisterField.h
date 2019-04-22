@@ -15,62 +15,61 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_REGISTER_REGISTERFIELD_H
-#define TIVA_REGISTER_REGISTERFIELD_H
+#ifndef TIVA_REGISTER_UNSAFE_REGISTERFIELD_H
+#define TIVA_REGISTER_UNSAFE_REGISTERFIELD_H
 
-#include "tiva/Register/ReadRegisterField.h"
+#include "tiva/Register/BaseRegisterField.h"
 #include "tiva/Register/RegisterBitNumber.h"
-#include "tiva/Register/UNSAFE_RegisterField.h"
+#include "tiva/Type/getMsignificantBits.h"
 
 namespace tiva {
 
-template <class RegisterFieldFieldType,
-          typename detail::RegisterBitNumber<
-              typename RegisterFieldFieldType::ValueType>::ValueType
-              RegisterFieldLsignificantRegisterBitNumberValue>
-class RegisterField;
+namespace detail {
 
 template <class RegisterFieldFieldType,
-          typename detail::RegisterBitNumber<
+          typename RegisterBitNumber<
               typename RegisterFieldFieldType::ValueType>::ValueType
               RegisterFieldLsignificantRegisterBitNumberValue>
-class RegisterField : public detail::UNSAFE_RegisterField<
-                          RegisterFieldFieldType,
-                          RegisterFieldLsignificantRegisterBitNumberValue> {
-public:
+class UNSAFE_RegisterField;
+
+template <class RegisterFieldFieldType,
+          typename RegisterBitNumber<
+              typename RegisterFieldFieldType::ValueType>::ValueType
+              RegisterFieldLsignificantRegisterBitNumberValue>
+class UNSAFE_RegisterField : public BaseRegisterField<RegisterFieldFieldType> {
   using FieldType = RegisterFieldFieldType;
   static constexpr auto LsignificantRegisterBitNumberValue{
       RegisterFieldLsignificantRegisterBitNumberValue};
-
-private:
   using FieldValueType = typename FieldType::ValueType;
-
-public:
   using ValueType = FieldValueType;
-  using ReadRegisterFieldType =
-      detail::ReadRegisterField<FieldType, LsignificantRegisterBitNumberValue>;
+  static constexpr auto LsignificantRegisterBitNumber{RegisterBitNumber<
+      ValueType>::template make<LsignificantRegisterBitNumberValue>()};
+  static_assert(
+      (FieldType::getMask() &
+       getMsignificantBits<ValueType>(LsignificantRegisterBitNumber)) == 0);
+  static constexpr auto Mask{FieldType::getMask()
+                             << LsignificantRegisterBitNumber};
+
+protected:
+  UNSAFE_RegisterField() = default;
 
 private:
-  using UNSAFE_RegisterFieldType =
-      detail::UNSAFE_RegisterField<FieldType,
-                                   LsignificantRegisterBitNumberValue>;
+  using BaseRegisterFieldType = BaseRegisterField<FieldType>;
 
-  constexpr explicit RegisterField(const FieldType RegisterFieldField)
-      : UNSAFE_RegisterFieldType(RegisterFieldField) {}
+protected:
+  constexpr explicit UNSAFE_RegisterField(const ValueType RegisterFieldValue)
+      : BaseRegisterFieldType(RegisterFieldValue) {}
+
+  constexpr explicit UNSAFE_RegisterField(const FieldType RegisterFieldField)
+      : BaseRegisterFieldType(RegisterFieldField
+                              << LsignificantRegisterBitNumber) {}
 
 public:
-  using UNSAFE_RegisterFieldType::getMask;
-
-  template <ValueType RegisterFieldValue>
-  static constexpr RegisterField make() {
-    return RegisterField(FieldType::template make<RegisterFieldValue>());
-  }
-
-  static RegisterField UNSAFE_make(const ValueType RegisterFieldValue) {
-    return RegisterField(FieldType::UNSAFE_make(RegisterFieldValue));
-  }
+  static constexpr auto getMask() { return Mask; }
 };
+
+} // namespace detail
 
 } // namespace tiva
 
-#endif // TIVA_REGISTER_REGISTERFIELD_H
+#endif // TIVA_REGISTER_UNSAFE_REGISTERFIELD_H

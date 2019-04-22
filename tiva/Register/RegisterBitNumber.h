@@ -15,34 +15,25 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_REGISTER_MEMORYMAPPEDREGISTER_H
-#define TIVA_REGISTER_MEMORYMAPPEDREGISTER_H
+#ifndef TIVA_REGISTER_REGISTERBITNUMBER_H
+#define TIVA_REGISTER_REGISTERBITNUMBER_H
 
-#include <cstdint>
+#include <limits>
+
+#include "tiva/Type/LclosedIntervalNumber.h"
 
 namespace tiva {
 
 namespace detail {
 
-template <class RegisterValueType> class MemorymappedRegister;
-
-template <class RegisterValueType> class MemorymappedRegister {
-  using ValueType = RegisterValueType;
-
-protected:
-  const std::uint32_t Address;
-
-  constexpr bool operator==(const MemorymappedRegister &RhandSide) const {
-    return this->Address == RhandSide.Address;
-  }
-
-public:
-  constexpr explicit MemorymappedRegister(const std::uint32_t RegisterAddress)
-      : Address(RegisterAddress) {}
-};
+template <class RegisterValueType>
+using RegisterBitNumber =
+    LclosedIntervalNumber<decltype(
+                              std::numeric_limits<RegisterValueType>::digits),
+                          0, std::numeric_limits<RegisterValueType>::digits>;
 
 } // namespace detail
 
 } // namespace tiva
 
-#endif // TIVA_REGISTER_MEMORYMAPPEDREGISTER_H
+#endif // TIVA_REGISTER_REGISTERBITNUMBER_H

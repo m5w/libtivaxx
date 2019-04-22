@@ -15,34 +15,33 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_REGISTER_MEMORYMAPPEDREGISTER_H
-#define TIVA_REGISTER_MEMORYMAPPEDREGISTER_H
+#ifndef TIVA_TYPE_GETMSIGNIFICANTBITS_H
+#define TIVA_TYPE_GETMSIGNIFICANTBITS_H
 
-#include <cstdint>
+#include <limits>
+
+#include "tiva/Type/LclosedIntervalNumber.h"
+#include "tiva/Type/getLsignificantBits.h"
 
 namespace tiva {
 
 namespace detail {
 
-template <class RegisterValueType> class MemorymappedRegister;
+template <class ValueType>
+constexpr ValueType
+getMsignificantBits(const LclosedIntervalNumber<
+                    decltype(std::numeric_limits<ValueType>::digits), 0,
+                    std::numeric_limits<ValueType>::digits + 1>
+                        MsignificantBitsCount) {
+  if (MsignificantBitsCount == 0)
+    return 0;
 
-template <class RegisterValueType> class MemorymappedRegister {
-  using ValueType = RegisterValueType;
-
-protected:
-  const std::uint32_t Address;
-
-  constexpr bool operator==(const MemorymappedRegister &RhandSide) const {
-    return this->Address == RhandSide.Address;
-  }
-
-public:
-  constexpr explicit MemorymappedRegister(const std::uint32_t RegisterAddress)
-      : Address(RegisterAddress) {}
-};
+  return getLsignificantBits<ValueType>(MsignificantBitsCount)
+         << (std::numeric_limits<ValueType>::digits - MsignificantBitsCount);
+}
 
 } // namespace detail
 
 } // namespace tiva
 
-#endif // TIVA_REGISTER_MEMORYMAPPEDREGISTER_H
+#endif // TIVA_TYPE_GETMSIGNIFICANTBITS_H

@@ -15,39 +15,41 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_FIELD_BASEFIELD_H
-#define TIVA_FIELD_BASEFIELD_H
+#ifndef TIVA_TYPE_BASEINTERVALNUMBER_H
+#define TIVA_TYPE_BASEINTERVALNUMBER_H
 
 namespace tiva {
 
 namespace detail {
 
-template <class FieldValueType> class BaseField;
+template <class IntervalNumberValueType> class BaseIntervalNumber;
 
-template <class FieldValueType>
-constexpr bool operator==(const BaseField<FieldValueType> &LhandSide,
-                          const BaseField<FieldValueType> &RhandSide) {
+template <class IntervalNumberValueType>
+constexpr bool
+operator==(const BaseIntervalNumber<IntervalNumberValueType> &LhandSide,
+           const BaseIntervalNumber<IntervalNumberValueType> &RhandSide) {
   return LhandSide.V == RhandSide.V;
 }
 
-template <class FieldValueType> class BaseField {
-  using ValueType = FieldValueType;
+template <class IntervalNumberValueType> class BaseIntervalNumber {
+  using ValueType = IntervalNumberValueType;
   ValueType V;
 
 protected:
-  BaseField() = default;
+  BaseIntervalNumber() = default;
 
-  constexpr explicit BaseField(const ValueType FieldValue) : V(FieldValue) {}
+  constexpr explicit BaseIntervalNumber(const ValueType IntervalNumberValue)
+      : V(IntervalNumberValue) {}
 
 public:
   constexpr operator ValueType() const { return this->V; }
 
-  friend constexpr bool operator==
-      <>(const BaseField &LhandSide, const BaseField &RhandSide);
+  friend constexpr bool operator==<>(const BaseIntervalNumber &LhandSide,
+                                     const BaseIntervalNumber &RhandSide);
 };
 
 } // namespace detail
 
 } // namespace tiva
 
-#endif // TIVA_FIELD_BASEFIELD_H
+#endif // TIVA_TYPE_BASEINTERVALNUMBER_H

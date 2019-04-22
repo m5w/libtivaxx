@@ -15,34 +15,25 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_REGISTER_MEMORYMAPPEDREGISTER_H
-#define TIVA_REGISTER_MEMORYMAPPEDREGISTER_H
-
-#include <cstdint>
+#ifndef TIVA_FIELD_FIELDISVALUEVALID_H
+#define TIVA_FIELD_FIELDISVALUEVALID_H
 
 namespace tiva {
 
 namespace detail {
 
-template <class RegisterValueType> class MemorymappedRegister;
-
-template <class RegisterValueType> class MemorymappedRegister {
-  using ValueType = RegisterValueType;
-
-protected:
-  const std::uint32_t Address;
-
-  constexpr bool operator==(const MemorymappedRegister &RhandSide) const {
-    return this->Address == RhandSide.Address;
-  }
+template <class FieldIsValueValidFieldType> class FieldIsValueValid {
+  using FieldType = FieldIsValueValidFieldType;
+  using FieldValueType = typename FieldType::ValueType;
 
 public:
-  constexpr explicit MemorymappedRegister(const std::uint32_t RegisterAddress)
-      : Address(RegisterAddress) {}
+  constexpr bool operator()(const FieldValueType FieldValue) const {
+    return true;
+  }
 };
 
 } // namespace detail
 
 } // namespace tiva
 
-#endif // TIVA_REGISTER_MEMORYMAPPEDREGISTER_H
+#endif // TIVA_FIELD_FIELDISVALUEVALID_H
