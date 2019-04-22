@@ -193,7 +193,8 @@ public:
       : RRegisterFieldsType(RRegisterFieldsRegister) {}
 
   bool operator==(const RRegisterFieldsge0 &RhandSide) const {
-    return RRegisterFieldsType::operator==(RhandSide);
+    return RRegisterFieldsType::operator==(
+        static_cast<const RRegisterFieldsType &>(RhandSide));
   }
 };
 
@@ -359,8 +360,10 @@ public:
                                 ReadRRegisterFieldsRegisterValue) {}
 
   bool operator==(const ReadRRegisterFieldsge0 &RhandSide) const {
-    return ReadRRegisterFieldsType::operator==(RhandSide) &&
-           ReadWRegisterFieldsType::operator==(RhandSide);
+    return ReadRRegisterFieldsType::operator==(
+               static_cast<const ReadRRegisterFieldsType &>(RhandSide)) &&
+           ReadWRegisterFieldsType::operator==(
+               static_cast<const ReadWRegisterFieldsType &>(RhandSide));
   }
 };
 

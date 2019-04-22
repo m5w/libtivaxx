@@ -42,10 +42,15 @@ nobase_libtiva___a_include_HEADERS = \
 	tiva/Register/BaseRegisterField.h \
 	tiva/Register/MemorymappedRegister.h \
 	tiva/Register/ReadRegisterField.h \
+	tiva/Register/ReadableMemorymappedRegister.h \
 	tiva/Register/Register.h \
 	tiva/Register/RegisterBitNumber.h \
 	tiva/Register/RegisterField.h \
+	tiva/Register/RoMemorymappedRegister.h \
+	tiva/Register/RwMemorymappedRegister.h \
 	tiva/Register/UNSAFE_RegisterField.h \
+	tiva/Register/WoMemorymappedRegister.h \
+	tiva/Register/WriteableMemorymappedRegister.h \
 	tiva/Type/BaseIntervalNumber.h \
 	tiva/Type/LclosedIntervalNumber.h \
 	tiva/Type/getLsignificantBits.h \

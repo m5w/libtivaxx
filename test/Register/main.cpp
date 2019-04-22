@@ -20,9 +20,9 @@
 
 #include <tiva/Field/DerivedField.h>
 #include <tiva/Field/Field.h>
-#include <tiva/Register/MemorymappedRegister.h>
 #include <tiva/Register/Register.h>
 #include <tiva/Register/RegisterField.h>
+#include <tiva/Register/RwMemorymappedRegister.h>
 
 using NibbleField = tiva::DerivedField<tiva::Field<std::uint32_t, 0x04>>;
 
@@ -35,7 +35,7 @@ using Nibble4Field = tiva::RegisterField<NibbleField::FieldType, 0x10>;
 static volatile std::uint32_t A;
 
 extern "C" void main() {
-  tiva::MemorymappedRegister<std::uint32_t> BaseRegister(
+  tiva::RwMemorymappedRegister<std::uint32_t> BaseRegister(
       reinterpret_cast<std::uint32_t>(&A));
   tiva::Register<decltype(BaseRegister), 0x00'00'00'00u, Nibble0Field>
       Register00(BaseRegister);
