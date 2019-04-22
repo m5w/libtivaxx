@@ -34,7 +34,6 @@ template <class RRegisterFieldsRegisterType,
           class... RRegisterFieldsFieldsgep1Types>
 class RRegisterFields;
 template <class RRegisterFieldsRegisterType,
-          class RRegisterFieldsReadWRegisterFieldsType,
           class... RRegisterFieldsFieldsTypes>
 class RRegisterFieldsge0;
 template <class ReadRRegisterFieldsRegisterType,
@@ -42,10 +41,74 @@ template <class ReadRRegisterFieldsRegisterType,
           class ReadRRegisterFieldsFieldType,
           class... ReadRRegisterFieldsFieldsgep1Types>
 class ReadRRegisterFields;
+template <class IsRegisterWriteableRegisterType, class = void>
+class IsRegisterWriteable;
 template <class ReadRRegisterFieldsRegisterType,
-          class ReadRRegisterFieldsReadWRegisterFieldsType,
+          bool ReadRRegisterFieldsIsRegisterWriteable,
+          class... ReadRRegisterFieldsFieldsTypes>
+class ReadRegisterFieldsge0;
+template <class ReadRRegisterFieldsRegisterType,
           class... ReadRRegisterFieldsFieldsTypes>
 class ReadRRegisterFieldsge0;
+template <class WRegisterFieldsRegisterType,
+          bool WRegisterFieldsMightAllFieldsBeWritten,
+          typename WRegisterFieldsRegisterType::ValueType
+              WRegisterFieldsRegisterResetValue,
+          class WRegisterFieldsFieldType,
+          class... WRegisterFieldsFieldTypesgep1Types>
+class WRegisterFields;
+template <class IsRegisterReadableRegisterType, class = void>
+class IsRegisterReadable;
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteType>
+class Write;
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWRegisterFieldsm1Type,
+          class WriteWRegisterFieldsm1FieldType>
+class WriteField0;
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWRegisterFieldsm1Type,
+          class WriteWRegisterFieldsm1FieldType, class WriteFieldType,
+          class... WriteFieldsgep1Types>
+class WriteField0WRegisterFields;
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteFieldslem1WRegisterFieldsType,
+          class WriteWriteFieldslem1WRegisterFieldsFieldType>
+class WriteFieldslege1;
+template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
+          typename WriteRegisterType::ValueType WriteRegisterResetValue,
+          class WriteWriteFieldslem1WRegisterFieldsType,
+          class WriteWriteFieldslem1WRegisterFieldsFieldType,
+          class WriteFieldType, class... WriteFieldsgep1Types>
+class WriteFieldslege1WRegisterFields;
+template <class ReadWRegisterFieldsRegisterType,
+          class ReadWRegisterFieldsFieldType,
+          class... ReadWRegisterFieldsFieldTypesgep1Types>
+class ReadWRegisterFields;
+template <class ReadWriteRegisterType, class ReadWriteReadWriteType>
+class ReadWrite;
+template <class ReadWriteRegisterType,
+          class ReadWriteReadWRegisterFieldsm1Type,
+          class ReadWriteReadWRegisterFieldsm1FieldType>
+class ReadWriteField0;
+template <class ReadWriteRegisterType,
+          class ReadWriteReadWRegisterFieldsm1Type,
+          class ReadWriteReadWRegisterFieldsm1FieldType,
+          class ReadWriteFieldType, class... ReadWriteFieldsgep1Types>
+class ReadWriteField0WRegisterFields;
+template <class ReadWriteRegisterType,
+          class ReadWriteReadWriteFieldslem1WRegisterFieldsType,
+          class ReadWriteReadWriteFieldslem1WRegisterFieldsFieldType>
+class ReadWriteFieldslege1;
+template <class ReadWriteRegisterType,
+          class ReadWriteReadWriteFieldslem1WRegisterFieldsType,
+          class ReadWriteReadWriteFieldslem1WRegisterFieldsFieldType,
+          class ReadWriteFieldType, class... ReadWriteFieldsgep1Types>
+class ReadWriteFieldslege1WRegisterFields;
 
 template <class RRegisterFieldsRegisterType,
           class RRegisterFieldsReadRRegisterFieldsType,
@@ -112,26 +175,20 @@ public:
 };
 
 template <class RRegisterFieldsRegisterType,
-          class RRegisterFieldsReadWRegisterFieldsType,
           class... RRegisterFieldsFieldsTypes>
 class RRegisterFieldsge0
     : public RRegisterFields<
           RRegisterFieldsRegisterType,
           ReadRRegisterFieldsge0<RRegisterFieldsRegisterType,
-                                 RRegisterFieldsReadWRegisterFieldsType,
                                  RRegisterFieldsFieldsTypes...>,
           RRegisterFieldsFieldsTypes...> {
   using RegisterType = RRegisterFieldsRegisterType;
-  using ReadWRegisterFieldsType = RRegisterFieldsReadWRegisterFieldsType;
   using RRegisterFieldsType = RRegisterFields<
       RegisterType,
-      ReadRRegisterFieldsge0<RegisterType, ReadWRegisterFieldsType,
-                             RRegisterFieldsFieldsTypes...>,
+      ReadRRegisterFieldsge0<RegisterType, RRegisterFieldsFieldsTypes...>,
       RRegisterFieldsFieldsTypes...>;
 
 public:
-  using RRegisterFieldsType::read;
-
   explicit RRegisterFieldsge0(const RegisterType &RRegisterFieldsRegister)
       : RRegisterFieldsType(RRegisterFieldsRegister) {}
 
@@ -214,28 +271,80 @@ public:
   }
 };
 
+template <class IsRegisterWriteableRegisterType, class>
+class IsRegisterWriteable : public std::false_type {};
+
+template <class IsRegisterWriteableRegisterType>
+class IsRegisterWriteable<
+    IsRegisterWriteableRegisterType,
+    decltype(std::declval<IsRegisterWriteableRegisterType>().write(
+                 std::declval<
+                     typename IsRegisterWriteableRegisterType::ValueType>()),
+             void())> : public std::true_type {};
+
 template <class ReadRRegisterFieldsRegisterType,
-          class ReadRRegisterFieldsReadWRegisterFieldsType,
           class... ReadRRegisterFieldsFieldsTypes>
-class ReadRRegisterFieldsge0
-    : public ReadRRegisterFieldsReadWRegisterFieldsType,
-      public ReadRRegisterFields<
-          ReadRRegisterFieldsRegisterType,
-          ReadRRegisterFieldsge0<ReadRRegisterFieldsRegisterType,
-                                 ReadRRegisterFieldsReadWRegisterFieldsType,
-                                 ReadRRegisterFieldsFieldsTypes...>,
-          ReadRRegisterFieldsFieldsTypes...> {
+class ReadRegisterFieldsge0<ReadRRegisterFieldsRegisterType, false,
+                            ReadRRegisterFieldsFieldsTypes...> {
   using RegisterType = ReadRRegisterFieldsRegisterType;
-  using ReadWRegisterFieldsType = ReadRRegisterFieldsReadWRegisterFieldsType;
-  using ReadRRegisterFieldsType = ReadRRegisterFields<
-      RegisterType,
-      ReadRRegisterFieldsge0<RegisterType, ReadWRegisterFieldsType,
-                             ReadRRegisterFieldsFieldsTypes...>,
-      ReadRRegisterFieldsFieldsTypes...>;
+  using RegisterValueType = typename RegisterType::ValueType;
 
 public:
-  using ReadRRegisterFieldsType::read;
-  using ReadWRegisterFieldsType::write;
+  ReadRegisterFieldsge0(
+      const RegisterType &ReadRRegisterFieldsRegister,
+      const RegisterValueType ReadRRegisterFieldsRegisterValue) {}
+
+  bool operator==(const ReadRegisterFieldsge0 &RhandSide) { return true; }
+};
+
+template <class ReadRRegisterFieldsRegisterType,
+          class... ReadRRegisterFieldsFieldsTypes>
+class ReadRegisterFieldsge0<ReadRRegisterFieldsRegisterType, true,
+                            ReadRRegisterFieldsFieldsTypes...>
+    : public ReadWRegisterFields<ReadRRegisterFieldsRegisterType,
+                                 ReadRRegisterFieldsFieldsTypes...> {
+  using RegisterType = ReadRRegisterFieldsRegisterType;
+  using ReadWRegisterFieldsType =
+      ReadWRegisterFields<RegisterType, ReadRRegisterFieldsFieldsTypes...>;
+  using RegisterValueType = typename RegisterType::ValueType;
+
+public:
+  ReadRegisterFieldsge0(
+      const RegisterType &ReadRRegisterFieldsRegister,
+      const RegisterValueType ReadRRegisterFieldsRegisterValue)
+      : ReadWRegisterFieldsType(ReadRRegisterFieldsRegister,
+                                ReadRRegisterFieldsRegisterValue) {}
+
+  bool operator==(const ReadRegisterFieldsge0 &RhandSide) const {
+    return *static_cast<const ReadWRegisterFieldsType *>(this) ==
+           static_cast<const ReadWRegisterFieldsType &>(RhandSide);
+  }
+};
+
+template <class ReadRRegisterFieldsRegisterType,
+          class... ReadRRegisterFieldsFieldsTypes>
+class ReadRRegisterFieldsge0
+    : public ReadRRegisterFields<
+          ReadRRegisterFieldsRegisterType,
+          ReadRRegisterFieldsge0<ReadRRegisterFieldsRegisterType,
+                                 ReadRRegisterFieldsFieldsTypes...>,
+          ReadRRegisterFieldsFieldsTypes...>,
+      public ReadRegisterFieldsge0<
+          ReadRRegisterFieldsRegisterType,
+          IsRegisterWriteable<ReadRRegisterFieldsRegisterType>::value,
+          ReadRRegisterFieldsFieldsTypes...> {
+  using RegisterType = ReadRRegisterFieldsRegisterType;
+  using ReadRRegisterFieldsType = ReadRRegisterFields<
+      RegisterType,
+      ReadRRegisterFieldsge0<RegisterType, ReadRRegisterFieldsFieldsTypes...>,
+      ReadRRegisterFieldsFieldsTypes...>;
+  using ReadWRegisterFieldsType =
+      ReadRegisterFieldsge0<RegisterType,
+                            IsRegisterWriteable<RegisterType>::value,
+                            ReadRRegisterFieldsFieldsTypes...>;
+
+public:
+  // using ReadRRegisterFieldsType::read;
 
 private:
   using RegisterValueType = typename RegisterType::ValueType;
@@ -244,53 +353,16 @@ public:
   ReadRRegisterFieldsge0(
       const RegisterType &ReadRRegisterFieldsRegister,
       const RegisterValueType ReadRRegisterFieldsRegisterValue)
-      : ReadWRegisterFieldsType(ReadRRegisterFieldsRegister,
+      : ReadRRegisterFieldsType(ReadRRegisterFieldsRegister,
                                 ReadRRegisterFieldsRegisterValue),
-        ReadRRegisterFieldsType(ReadRRegisterFieldsRegister,
+        ReadWRegisterFieldsType(ReadRRegisterFieldsRegister,
                                 ReadRRegisterFieldsRegisterValue) {}
 
   bool operator==(const ReadRRegisterFieldsge0 &RhandSide) const {
-    return (*static_cast<const ReadWRegisterFieldsType *>(this) ==
-            static_cast<const ReadWRegisterFieldsType &>(RhandSide)) &&
-           ReadRRegisterFieldsType::operator==(RhandSide);
+    return ReadRRegisterFieldsType::operator==(RhandSide) &&
+           ReadWRegisterFieldsType::operator==(RhandSide);
   }
 };
-
-template <class WRegisterFieldsRegisterType,
-          bool WRegisterFieldsMightAllFieldsBeWritten,
-          typename WRegisterFieldsRegisterType::ValueType
-              WRegisterFieldsRegisterResetValue,
-          class WRegisterFieldsFieldType,
-          class... WRegisterFieldsFieldTypesgep1Types>
-class WRegisterFields;
-template <class IsRegisterReadableRegisterType, class = void>
-class IsRegisterReadable;
-template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
-          typename WriteRegisterType::ValueType WriteRegisterResetValue,
-          class WriteWriteType>
-class Write;
-template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
-          typename WriteRegisterType::ValueType WriteRegisterResetValue,
-          class WriteWRegisterFieldsm1Type,
-          class WriteWRegisterFieldsm1FieldType>
-class WriteField0;
-template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
-          typename WriteRegisterType::ValueType WriteRegisterResetValue,
-          class WriteWRegisterFieldsm1Type,
-          class WriteWRegisterFieldsm1FieldType, class WriteFieldType,
-          class... WriteFieldsgep1Types>
-class WriteField0WRegisterFields;
-template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
-          typename WriteRegisterType::ValueType WriteRegisterResetValue,
-          class WriteWriteFieldslem1WRegisterFieldsType,
-          class WriteWriteFieldslem1WRegisterFieldsFieldType>
-class WriteFieldslege1;
-template <class WriteRegisterType, bool WriteMightAllFieldsBeWritten,
-          typename WriteRegisterType::ValueType WriteRegisterResetValue,
-          class WriteWriteFieldslem1WRegisterFieldsType,
-          class WriteWriteFieldslem1WRegisterFieldsFieldType,
-          class WriteFieldType, class... WriteFieldsgep1Types>
-class WriteFieldslege1WRegisterFields;
 
 template <class WRegisterFieldsRegisterType,
           bool WRegisterFieldsMightAllFieldsBeWritten,
@@ -512,13 +584,13 @@ class WriteField0WRegisterFields<
                   WRegisterFieldsm1Type, WRegisterFieldsm1FieldType>;
 
 protected:
-  using WriteField0Type::getInverseMask;
+  // using WriteField0Type::getInverseMask;
 
 private:
   using RegisterValueType = typename RegisterType::ValueType;
 
 protected:
-  using WriteField0Type::operator RegisterValueType;
+  // using WriteField0Type::operator RegisterValueType;
 
 public:
   using WriteField0Type::write;
@@ -565,13 +637,13 @@ class WriteField0WRegisterFields
       WRegisterFieldsm1FieldType, WriteFieldsgep1Types...>;
 
 protected:
-  using WriteField0WRegisterFieldsgep1Type::getInverseMask;
+  // using WriteField0WRegisterFieldsgep1Type::getInverseMask;
 
 private:
   using RegisterValueType = typename RegisterType::ValueType;
 
 protected:
-  using WriteField0WRegisterFieldsgep1Type::operator RegisterValueType;
+  // using WriteField0WRegisterFieldsgep1Type::operator RegisterValueType;
 
 public:
   using WriteField0WRegisterFieldsgep1Type::write;
@@ -706,13 +778,13 @@ class WriteFieldslege1WRegisterFields<
                        WriteFieldslem1WRegisterFieldsFieldType>;
 
 protected:
-  using WriteFieldslege1Type::getInverseMask;
+  // using WriteFieldslege1Type::getInverseMask;
 
 private:
   using RegisterValueType = typename RegisterType::ValueType;
 
 protected:
-  using WriteFieldslege1Type::operator RegisterValueType;
+  // using WriteFieldslege1Type::operator RegisterValueType;
 
 public:
   using WriteFieldslege1Type::write;
@@ -769,13 +841,13 @@ class WriteFieldslege1WRegisterFields
                                       WriteFieldsgep1Types...>;
 
 protected:
-  using WriteFieldslege1WRegisterFieldsgep1Type::getInverseMask;
+  // using WriteFieldslege1WRegisterFieldsgep1Type::getInverseMask;
 
 private:
   using RegisterValueType = typename RegisterType::ValueType;
 
 protected:
-  using WriteFieldslege1WRegisterFieldsgep1Type::operator RegisterValueType;
+  // using WriteFieldslege1WRegisterFieldsgep1Type::operator RegisterValueType;
 
 public:
   using WriteFieldslege1WRegisterFieldsgep1Type::write;
@@ -799,31 +871,6 @@ public:
     return WriteFieldslep1WRegisterFieldsType(this->R, *this, F);
   }
 };
-
-template <class ReadWRegisterFieldsRegisterType,
-          class ReadWRegisterFieldsFieldType,
-          class... ReadWRegisterFieldsFieldTypesgep1Types>
-class ReadWRegisterFields;
-template <class ReadWriteRegisterType, class ReadWriteReadWriteType>
-class ReadWrite;
-template <class ReadWriteRegisterType,
-          class ReadWriteReadWRegisterFieldsm1Type,
-          class ReadWriteReadWRegisterFieldsm1FieldType>
-class ReadWriteField0;
-template <class ReadWriteRegisterType,
-          class ReadWriteReadWRegisterFieldsm1Type,
-          class ReadWriteReadWRegisterFieldsm1FieldType,
-          class ReadWriteFieldType, class... ReadWriteFieldsgep1Types>
-class ReadWriteField0WRegisterFields;
-template <class ReadWriteRegisterType,
-          class ReadWriteReadWriteFieldslem1WRegisterFieldsType,
-          class ReadWriteReadWriteFieldslem1WRegisterFieldsFieldType>
-class ReadWriteFieldslege1;
-template <class ReadWriteRegisterType,
-          class ReadWriteReadWriteFieldslem1WRegisterFieldsType,
-          class ReadWriteReadWriteFieldslem1WRegisterFieldsFieldType,
-          class ReadWriteFieldType, class... ReadWriteFieldsgep1Types>
-class ReadWriteFieldslege1WRegisterFields;
 
 template <class ReadWRegisterFieldsRegisterType,
           class ReadWRegisterFieldsFieldType>
@@ -1017,13 +1064,13 @@ class ReadWriteField0WRegisterFields<
                       ReadWRegisterFieldsm1FieldType>;
 
 protected:
-  using ReadWriteField0Type::getInverseMask;
+  // using ReadWriteField0Type::getInverseMask;
 
 private:
   using RegisterValueType = typename RegisterType::ValueType;
 
 protected:
-  using ReadWriteField0Type::operator RegisterValueType;
+  // using ReadWriteField0Type::operator RegisterValueType;
 
 public:
   using ReadWriteField0Type::write;
@@ -1066,13 +1113,13 @@ class ReadWriteField0WRegisterFields
                                      ReadWriteFieldsgep1Types...>;
 
 protected:
-  using ReadWriteField0WRegisterFieldsgep1Type::getInverseMask;
+  // using ReadWriteField0WRegisterFieldsgep1Type::getInverseMask;
 
 private:
   using RegisterValueType = typename RegisterType::ValueType;
 
 protected:
-  using ReadWriteField0WRegisterFieldsgep1Type::operator RegisterValueType;
+  // using ReadWriteField0WRegisterFieldsgep1Type::operator RegisterValueType;
 
 public:
   using ReadWriteField0WRegisterFieldsgep1Type::write;
@@ -1201,13 +1248,13 @@ class ReadWriteFieldslege1WRegisterFields<
                            ReadWriteFieldslem1WRegisterFieldsFieldType>;
 
 protected:
-  using ReadWriteFieldslege1Type::getInverseMask;
+  // using ReadWriteFieldslege1Type::getInverseMask;
 
 private:
   using RegisterValueType = typename RegisterType::ValueType;
 
 protected:
-  using ReadWriteFieldslege1Type::operator RegisterValueType;
+  // using ReadWriteFieldslege1Type::operator RegisterValueType;
 
 public:
   using ReadWriteFieldslege1Type::write;
@@ -1259,14 +1306,14 @@ class ReadWriteFieldslege1WRegisterFields
           ReadWriteFieldsgep1Types...>;
 
 protected:
-  using ReadWriteFieldslege1WRegisterFieldsgep1Type::getInverseMask;
+  // using ReadWriteFieldslege1WRegisterFieldsgep1Type::getInverseMask;
 
 private:
   using RegisterValueType = typename RegisterType::ValueType;
 
 protected:
-  using ReadWriteFieldslege1WRegisterFieldsgep1Type::
-  operator RegisterValueType;
+  // using ReadWriteFieldslege1WRegisterFieldsgep1Type::
+  // operator RegisterValueType;
 
 public:
   using ReadWriteFieldslege1WRegisterFieldsgep1Type::write;
@@ -1309,7 +1356,7 @@ class Read : public ReadWRegisterFields<ReadRegisterType,
       ReadWRegisterFields<ReadRegisterType, ReadRegisterFieldsTypes...>;
 
 public:
-  using ReadWRegisterFieldsType::write;
+  // using ReadWRegisterFieldsType::write;
 
   explicit Read(const ReadRegisterType &ReadRegister)
       : ReadWRegisterFieldsType(ReadRegister, ReadRegister.read()) {}
@@ -1321,11 +1368,8 @@ template <class RegisterRegisterType,
           typename RegisterRegisterType::ValueType RegisterResetValue,
           class... RegisterFieldsTypes>
 class Register
-    : public detail::RRegisterFieldsge0<
-          RegisterRegisterType,
-          detail::ReadWRegisterFields<RegisterRegisterType,
-                                      RegisterFieldsTypes...>,
-          RegisterFieldsTypes...>,
+    : public detail::RRegisterFieldsge0<RegisterRegisterType,
+                                        RegisterFieldsTypes...>,
       detail::WRegisterFields<RegisterRegisterType, true, RegisterResetValue,
                               RegisterFieldsTypes...> {
 public:
@@ -1334,10 +1378,8 @@ public:
 
 private:
   const RegisterType &R;
-  using RRegisterFieldsType = detail::RRegisterFieldsge0<
-      RegisterType,
-      detail::ReadWRegisterFields<RegisterType, RegisterFieldsTypes...>,
-      RegisterFieldsTypes...>;
+  using RRegisterFieldsType =
+      detail::RRegisterFieldsge0<RegisterType, RegisterFieldsTypes...>;
 
 public:
   using RRegisterFieldsType::read;
