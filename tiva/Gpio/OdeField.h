@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_GPIO_ODE_H
-#define TIVA_GPIO_ODE_H
+#ifndef TIVA_GPIO_ODEFIELD_H
+#define TIVA_GPIO_ODEFIELD_H
 
 #include <cstdint>
 
@@ -51,4 +51,4 @@ public:
 
 } // namespace tiva
 
-#endif // TIVA_GPIO_ODE_H
+#endif // TIVA_GPIO_ODEFIELD_H
