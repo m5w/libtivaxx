@@ -30,6 +30,10 @@ public:
   constexpr bool operator()(const FieldValueType FieldValue) const {
     return true;
   }
+
+  constexpr bool operator==(const FieldIsValueValid &RhandSide) const {
+    return true;
+  }
 };
 
 } // namespace detail

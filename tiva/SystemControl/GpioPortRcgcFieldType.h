@@ -15,34 +15,25 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_FIELD_BASEFIELD_H
-#define TIVA_FIELD_BASEFIELD_H
+#ifndef TIVA_SYSTEMCONTROL_GPIOPORTRCGCFIELDTYPE_H
+#define TIVA_SYSTEMCONTROL_GPIOPORTRCGCFIELDTYPE_H
+
+#include "tiva/Register/RegisterField.h"
+#include "tiva/SystemControl/GpioPortIdentifier.h"
+#include "tiva/SystemControl/GpioPortRcgcFieldLsignificantRegisterBitNumber.h"
+#include "tiva/SystemControl/RcgcField.h"
 
 namespace tiva {
 
 namespace detail {
 
-template <class FieldValueType> class BaseField;
-
-template <class FieldValueType> class BaseField {
-  using ValueType = FieldValueType;
-  ValueType V;
-
-protected:
-  BaseField() = default;
-
-  constexpr explicit BaseField(const ValueType FieldValue) : V(FieldValue) {}
-
-public:
-  constexpr operator ValueType() const { return this->V; }
-
-  constexpr bool operator==(const BaseField &RhandSide) const {
-    return this->V == RhandSide.V;
-  }
-};
+template <GpioPortIdentifier GpioPortRcgcFieldGpioPortIdentifer>
+using GpioPortRcgcFieldType =
+    RegisterField<RcgcField, GpioPortRcgcFieldLsignificantRegisterBitNumber<
+                                 GpioPortRcgcFieldGpioPortIdentifer>::value>;
 
 } // namespace detail
 
 } // namespace tiva
 
-#endif // TIVA_FIELD_BASEFIELD_H
+#endif // TIVA_SYSTEMCONTROL_GPIOPORTRCGCFIELDTYPE_H

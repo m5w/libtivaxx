@@ -53,8 +53,7 @@ private:
 
   using BaseIntervalNumberType = BaseIntervalNumber<ValueType>;
 
-  constexpr explicit LclosedIntervalNumber(
-      const ValueType IntervalNumberValue)
+  constexpr explicit LclosedIntervalNumber(const ValueType IntervalNumberValue)
       : BaseIntervalNumberType(IntervalNumberValue) {}
 
 public:
@@ -82,6 +81,10 @@ private:
 public:
   constexpr operator IntervalREndpointp1Type() const {
     return IntervalREndpointp1Type(static_cast<ValueType>(*this));
+  }
+
+  constexpr bool operator==(const LclosedIntervalNumber &RhandSide) const {
+    return BaseIntervalNumberType::operator==(RhandSide);
   }
 };
 

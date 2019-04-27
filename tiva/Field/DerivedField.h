@@ -62,6 +62,10 @@ public:
   static DerivedField UNSAFE_make(const ValueType FieldValue) {
     return DerivedField(FieldType::UNSAFE_make(FieldValue));
   }
+
+  constexpr bool operator==(const DerivedField &RhandSide) const {
+    return UNSAFE_FieldType::operator==(RhandSide);
+  }
 };
 
 } // namespace tiva

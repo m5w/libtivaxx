@@ -15,19 +15,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "tiva/SystemControl/GpioPort.h"
+#ifndef TIVA_SYSTEMCONTROL_GPIOPORTIDENTIFIER_H
+#define TIVA_SYSTEMCONTROL_GPIOPORTIDENTIFIER_H
 
 namespace tiva {
 
-namespace detail {
-
-template class GpioPort<GpioPortFRunModeClockGatingControl>;
-template class GpioPort<GpioPortERunModeClockGatingControl>;
-template class GpioPort<GpioPortDRunModeClockGatingControl>;
-template class GpioPort<GpioPortCRunModeClockGatingControl>;
-template class GpioPort<GpioPortBRunModeClockGatingControl>;
-template class GpioPort<GpioPortARunModeClockGatingControl>;
-
-} // namespace detail
+enum class GpioPortIdentifier { A, B, C, D, E, F };
 
 } // namespace tiva
+
+#endif // TIVA_SYSTEMCONTROL_GPIOPORTIDENTIFIER_H

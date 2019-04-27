@@ -28,43 +28,53 @@ aclocal_DATA = \
 lib_LIBRARIES = \
 	libtiva++.a
 
-libtiva___a_SOURCES = \
-	tiva/Gpio/Registers.cpp \
-	tiva/SystemControl/GpioPort.cpp \
-	tiva/SystemControl/Registers.cpp
+libtiva___a_SOURCES =
 
 libtiva___a_includedir = $(includedir)
 
 nobase_libtiva___a_include_HEADERS = \
-	tiva/Field/BaseField.h \
+	tiva/Type/LclosedIntervalNumber.h \
+	tiva/Type/BaseIntervalNumber.h \
+	tiva/Type/getMsignificantBits.h \
+	tiva/Type/getLsignificantBits.h \
 	tiva/Field/DerivedField.h \
-	tiva/Field/EnumeratedField.h \
-	tiva/Field/Field.h \
 	tiva/Field/FieldIsValueValid.h \
+	tiva/Field/BaseField.h \
+	tiva/Field/EnumeratedField.h \
 	tiva/Field/FieldSize.h \
+	tiva/Field/Field.h \
 	tiva/Field/UNSAFE_Field.h \
-	tiva/Gpio/AlternateFunctionSelectField.h \
-	tiva/Gpio/PortMuxControlField.h \
-	tiva/Gpio/Registers.h \
-	tiva/Register/BaseRegisterField.h \
-	tiva/Register/MemorymappedRegister.h \
-	tiva/Register/ReadRegisterField.h \
-	tiva/Register/ReadableMemorymappedRegister.h \
 	tiva/Register/Register.h \
-	tiva/Register/RegisterBitNumber.h \
+	tiva/Register/UNSAFE_RegisterField.h \
+	tiva/Register/RwMemorymappedRegister.h \
+	tiva/Register/ReadableMemorymappedRegister.h \
+	tiva/Register/MemorymappedRegister.h \
+	tiva/Register/WriteableMemorymappedRegister.h \
+	tiva/Register/WoMemorymappedRegister.h \
 	tiva/Register/RegisterField.h \
 	tiva/Register/RoMemorymappedRegister.h \
-	tiva/Register/RwMemorymappedRegister.h \
-	tiva/Register/UNSAFE_RegisterField.h \
-	tiva/Register/WoMemorymappedRegister.h \
-	tiva/Register/WriteableMemorymappedRegister.h \
-	tiva/SystemControl/GpioPort.h \
-	tiva/SystemControl/Registers.h \
-	tiva/SystemControl/RunModeClockGatingControlField.h \
-	tiva/Type/BaseIntervalNumber.h \
-	tiva/Type/LclosedIntervalNumber.h \
-	tiva/Type/getLsignificantBits.h \
-	tiva/Type/getMsignificantBits.h
+	tiva/Register/ReadRegisterField.h \
+	tiva/Register/BaseRegisterField.h \
+	tiva/Register/RegisterBitNumber.h \
+	tiva/SystemControl/GpioPortRcgcFieldType.h \
+	tiva/SystemControl/GpioPortRcgcFieldLsignificantRegisterBitNumber.h \
+	tiva/SystemControl/GpioPortIdentifier.h \
+	tiva/SystemControl/RcgcField.h \
+	tiva/Gpio/GpioPinAfselFieldType.h \
+	tiva/Gpio/AfselField.h \
+	tiva/Gpio/DenField.h \
+	tiva/Gpio/GpioPinIdentifier.h \
+	tiva/Gpio/GpioPinPmcFieldType.h \
+	tiva/Gpio/GpioPinAfselFieldLsignificantRegisterBitNumber.h \
+	tiva/Gpio/GpioPinOdeFieldType.h \
+	tiva/Gpio/GpioPinPmcFieldLsignificantRegisterBitNumber.h \
+	tiva/Gpio/PmcField.h \
+	tiva/Gpio/GpioPort.h \
+	tiva/Gpio/GpioPinGpioPortIdentifier.h \
+	tiva/Gpio/OdeField.h \
+	tiva/Gpio/GpioPinDenFieldType.h \
+	tiva/Gpio/GpioPinDenFieldLsignificantRegisterBitNumber.h \
+	tiva/Gpio/GpioPinOdeFieldLsignificantRegisterBitNumber.h
 
 noinst_PROGRAMS = \
 	libtiva++-test-Register.axf

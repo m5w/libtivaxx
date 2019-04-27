@@ -61,6 +61,10 @@ public:
 
   constexpr explicit ReadRegisterField(const ValueType RegisterFieldValue)
       : UNSAFE_RegisterFieldType(RegisterFieldValue) {}
+
+  constexpr bool operator==(const ReadRegisterField &RhandSide) const {
+    return UNSAFE_RegisterFieldType::operator==(RhandSide);
+  }
 };
 
 } // namespace detail

@@ -23,30 +23,22 @@
 #include "tiva/Register/Register.h"
 #include "tiva/Register/RegisterField.h"
 #include "tiva/Register/RwMemorymappedRegister.h"
-#include "tiva/SystemControl/RunModeClockGatingControlField.h"
+#include "tiva/SystemControl/GpioPortIdentifier.h"
+#include "tiva/SystemControl/GpioPortRcgcBitNumber.h"
+#include "tiva/SystemControl/GpioPortRcgcFieldType.h"
+#include "tiva/SystemControl/RcgcField.h"
 
 namespace tiva {
 
 namespace detail {
 
-using GpioPortFRunModeClockGatingControl =
-    RegisterField<RunModeClockGatingControlField::FieldType, 5>;
-using GpioPortERunModeClockGatingControl =
-    RegisterField<RunModeClockGatingControlField::FieldType, 4>;
-using GpioPortDRunModeClockGatingControl =
-    RegisterField<RunModeClockGatingControlField::FieldType, 3>;
-using GpioPortCRunModeClockGatingControl =
-    RegisterField<RunModeClockGatingControlField::FieldType, 2>;
-using GpioPortBRunModeClockGatingControl =
-    RegisterField<RunModeClockGatingControlField::FieldType, 1>;
-using GpioPortARunModeClockGatingControl =
-    RegisterField<RunModeClockGatingControlField::FieldType, 0>;
-
-extern Register<
-    RwMemorymappedRegister<std::uint32_t>, 0x0000'0000,
-    GpioPortFRunModeClockGatingControl, GpioPortERunModeClockGatingControl,
-    GpioPortDRunModeClockGatingControl, GpioPortCRunModeClockGatingControl,
-    GpioPortBRunModeClockGatingControl, GpioPortARunModeClockGatingControl>
+extern Register<RwMemorymappedRegister<std::uint32_t>, 0x0000'0000,
+                GpioPortRcgcFieldType<GpioPortIdentifier::F>,
+                GpioPortRcgcFieldType<GpioPortIdentifier::E>,
+                GpioPortRcgcFieldType<GpioPortIdentifier::D>,
+                GpioPortRcgcFieldType<GpioPortIdentifier::C>,
+                GpioPortRcgcFieldType<GpioPortIdentifier::B>,
+                GpioPortRcgcFieldType<GpioPortIdentifier::A>>
     Rcgcgpio;
 
 } // namespace detail

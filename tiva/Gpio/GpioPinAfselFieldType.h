@@ -15,34 +15,25 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_FIELD_BASEFIELD_H
-#define TIVA_FIELD_BASEFIELD_H
+#ifndef TIVA_GPIO_GPIOPINAFSELFIELDTYPE_H
+#define TIVA_GPIO_GPIOPINAFSELFIELDTYPE_H
+
+#include "tiva/Gpio/AfselField.h"
+#include "tiva/Gpio/GpioPinAfselFieldLsignificantRegisterBitNumber.h"
+#include "tiva/Gpio/GpioPinIdentifier.h"
+#include "tiva/Register/RegisterField.h"
 
 namespace tiva {
 
 namespace detail {
 
-template <class FieldValueType> class BaseField;
-
-template <class FieldValueType> class BaseField {
-  using ValueType = FieldValueType;
-  ValueType V;
-
-protected:
-  BaseField() = default;
-
-  constexpr explicit BaseField(const ValueType FieldValue) : V(FieldValue) {}
-
-public:
-  constexpr operator ValueType() const { return this->V; }
-
-  constexpr bool operator==(const BaseField &RhandSide) const {
-    return this->V == RhandSide.V;
-  }
-};
+template <GpioPinIdentifier GpioPinAfselFieldGpioPinIdentifier>
+using GpioPinAfselFieldType =
+    RegisterField<AfselField, GpioPinAfselFieldLsignificantBitNumber<
+                                  GpioPinAfselFieldGpioPinIdentifier>::value>;
 
 } // namespace detail
 
 } // namespace tiva
 
-#endif // TIVA_FIELD_BASEFIELD_H
+#endif // TIVA_GPIO_GPIOPINAFSELFIELDTYPE_H

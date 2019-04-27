@@ -24,13 +24,6 @@ namespace detail {
 
 template <class RegisterFieldFieldType> class BaseRegisterField;
 
-template <class RegisterFieldFieldType>
-constexpr bool
-operator==(const BaseRegisterField<RegisterFieldFieldType> &LhandSide,
-           const BaseRegisterField<RegisterFieldFieldType> &RhandSide) {
-  return LhandSide.V == RhandSide.V;
-}
-
 template <class RegisterFieldFieldType> class BaseRegisterField {
   using FieldType = RegisterFieldFieldType;
   using FieldValueType = typename FieldType::ValueType;
@@ -46,8 +39,9 @@ protected:
 public:
   constexpr operator ValueType() const { return this->V; }
 
-  friend constexpr bool operator==<>(const BaseRegisterField &LhandSide,
-                                     const BaseRegisterField &RhandSide);
+  constexpr bool operator==(const BaseRegisterField &RhandSide) const {
+    return this->V == RhandSide.V;
+  }
 };
 
 } // namespace detail

@@ -15,19 +15,57 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "tiva/SystemControl/Registers.h"
+#ifndef TIVA_GPIO_GPIOPINIDENTIFIER_H
+#define TIVA_GPIO_GPIOPINIDENTIFIER_H
 
 namespace tiva {
 
-namespace detail {
-
-Register<
-    RwMemorymappedRegister<std::uint32_t>, 0x0000'0000,
-    GpioPortFRunModeClockGatingControl, GpioPortERunModeClockGatingControl,
-    GpioPortDRunModeClockGatingControl, GpioPortCRunModeClockGatingControl,
-    GpioPortBRunModeClockGatingControl, GpioPortARunModeClockGatingControl>
-    Rcgcgpio(RwMemorymappedRegister<std::uint32_t>(0x400F'E000 + 0x608));
-
-} // namespace detail
+enum class GpioPinIdentifier {
+  Pa0,
+  Pa1,
+  Pa2,
+  Pa3,
+  Pa4,
+  Pa5,
+  Pa6,
+  Pa7,
+  Pb0,
+  Pb1,
+  Pb2,
+  Pb3,
+  Pb4,
+  Pb5,
+  Pb6,
+  Pb7,
+  Pc0,
+  Pc1,
+  Pc2,
+  Pc3,
+  Pc4,
+  Pc5,
+  Pc6,
+  Pc7,
+  Pd0,
+  Pd1,
+  Pd2,
+  Pd3,
+  Pd4,
+  Pd5,
+  Pd6,
+  Pd7,
+  Pe0,
+  Pe1,
+  Pe2,
+  Pe3,
+  Pe4,
+  Pe5,
+  Pf0,
+  Pf1,
+  Pf2,
+  Pf3,
+  Pf4
+};
 
 } // namespace tiva
+
+#endif // TIVA_GPIO_GPIOPINIDENTIFIER_H

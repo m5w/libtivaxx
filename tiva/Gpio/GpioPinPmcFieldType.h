@@ -15,41 +15,26 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_GPIO_ALTERNATEFUNCTIONSELECTFIELD_H
-#define TIVA_GPIO_ALTERNATEFUNCTIONSELECTFIELD_H
+#ifndef TIVA_GPIO_GPIOPINPMCFIELDTYPE_H
+#define TIVA_GPIO_GPIOPINPMCFIELDTYPE_H
 
-#include <cstdint>
-
-#include "tiva/Field/EnumeratedField.h"
-#include "tiva/Field/Field.h"
+#include "tiva/Gpio/GpioPinIdentifier.h"
+#include "tiva/Gpio/GpioPinPmcFieldLsignificantRegisterBitNumber.h"
+#include "tiva/Gpio/PmcField.h"
+#include "tiva/Register/RegisterField.h"
 
 namespace tiva {
 
 namespace detail {
 
-class AlternateFunctionSelectField
-    : public EnumeratedField<Field<std::uint32_t, 1>> {
-public:
-  using FieldType = Field<std::uint32_t, 1>;
-
-private:
-  using EnumeratedFieldType = EnumeratedField<FieldType>;
-
-  constexpr explicit AlternateFunctionSelectField(const FieldType FieldField)
-      : EnumeratedFieldType(FieldField) {}
-
-public:
-  static constexpr auto Gpio() {
-    return AlternateFunctionSelectField(FieldType::make<0>());
-  }
-
-  static constexpr auto AlternateFunction() {
-    return AlternateFunctionSelectField(FieldType::make<1>());
-  }
-};
+template <GpioPinIdentifier GpioPinPmcFieldGpioPinIdentifier>
+using GpioPinPmcFieldType =
+    RegisterField<PmcField<GpioPinPmcFieldGpioPinIdentifier>,
+                  GpioPinPmcFieldLsignificantBitNumber<
+                      GpioPinPmcFieldGpioPinIdentifier>::value>;
 
 } // namespace detail
 
 } // namespace tiva
 
-#endif // TIVA_GPIO_ALTERNATEFUNCTIONSELECTFIELD_H
+#endif // TIVA_GPIO_GPIOPINPMCFIELDTYPE_H

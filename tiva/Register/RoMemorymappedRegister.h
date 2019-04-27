@@ -40,8 +40,7 @@ public:
       : ReadableMemorymappedRegisterType(RegisterAddress) {}
 
   constexpr bool operator==(const RoMemorymappedRegister &RhandSide) const {
-    return ReadableMemorymappedRegisterType::operator==(
-        static_cast<const ReadableMemorymappedRegisterType &>(RhandSide));
+    return ReadableMemorymappedRegisterType::operator==(RhandSide);
   }
 };
 

@@ -15,8 +15,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with libtiva++.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef TIVA_SYSTEMCONTROL_RUNMODECLOCKGATINGCONTROLFIELD_H
-#define TIVA_SYSTEMCONTROL_RUNMODECLOCKGATINGCONTROLFIELD_H
+#ifndef TIVA_GPIO_AFSELFIELD_H
+#define TIVA_GPIO_AFSELFIELD_H
 
 #include <cstdint>
 
@@ -27,24 +27,25 @@ namespace tiva {
 
 namespace detail {
 
-class RunModeClockGatingControlField
-    : public EnumeratedField<Field<std::uint32_t, 1>> {
+class AfselField : public EnumeratedField<Field<std::uint32_t, 1>> {
 public:
   using FieldType = Field<std::uint32_t, 1>;
 
 private:
   using EnumeratedFieldType = EnumeratedField<FieldType>;
 
-  constexpr explicit RunModeClockGatingControlField(const FieldType FieldField)
+  constexpr explicit AfselField(const FieldType FieldField)
       : EnumeratedFieldType(FieldField) {}
 
-public:
-  static constexpr auto Disabled() {
-    return RunModeClockGatingControlField(FieldType::make<0>());
-  }
+  using FieldValueType = typename FieldType::ValueType;
 
-  static constexpr auto Enabled() {
-    return RunModeClockGatingControlField(FieldType::make<1>());
+public:
+  using ValueType = FieldValueType;
+
+  static constexpr auto Gpio() { return AfselField(FieldType::make<0>()); }
+
+  static constexpr auto AlternateFunction() {
+    return AfselField(FieldType::make<1>());
   }
 };
 
@@ -52,4 +53,4 @@ public:
 
 } // namespace tiva
 
-#endif // TIVA_SYSTEMCONTROL_RUNMODECLOCKGATINGCONTROLFIELD_H
+#endif // TIVA_GPIO_AFSELFIELD_H

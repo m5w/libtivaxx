@@ -24,13 +24,6 @@ namespace detail {
 
 template <class IntervalNumberValueType> class BaseIntervalNumber;
 
-template <class IntervalNumberValueType>
-constexpr bool
-operator==(const BaseIntervalNumber<IntervalNumberValueType> &LhandSide,
-           const BaseIntervalNumber<IntervalNumberValueType> &RhandSide) {
-  return LhandSide.V == RhandSide.V;
-}
-
 template <class IntervalNumberValueType> class BaseIntervalNumber {
   using ValueType = IntervalNumberValueType;
   ValueType V;
@@ -41,11 +34,12 @@ protected:
   constexpr explicit BaseIntervalNumber(const ValueType IntervalNumberValue)
       : V(IntervalNumberValue) {}
 
+  constexpr bool operator==(const BaseIntervalNumber &RhandSide) const {
+    return this->V == RhandSide.V;
+  }
+
 public:
   constexpr operator ValueType() const { return this->V; }
-
-  friend constexpr bool operator==<>(const BaseIntervalNumber &LhandSide,
-                                     const BaseIntervalNumber &RhandSide);
 };
 
 } // namespace detail

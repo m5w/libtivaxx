@@ -54,6 +54,10 @@ public:
   static Field UNSAFE_make(const ValueType FieldValue) {
     return Field(FieldValue);
   }
+
+  constexpr bool operator==(const Field &RhandSide) const {
+    return UNSAFE_FieldType::operator==(RhandSide);
+  }
 };
 
 } // namespace tiva

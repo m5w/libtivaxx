@@ -41,12 +41,6 @@ public:
   using FieldType = RegisterFieldFieldType;
   static constexpr auto LsignificantRegisterBitNumberValue{
       RegisterFieldLsignificantRegisterBitNumberValue};
-
-private:
-  using FieldValueType = typename FieldType::ValueType;
-
-public:
-  using ValueType = FieldValueType;
   using ReadRegisterFieldType =
       detail::ReadRegisterField<FieldType, LsignificantRegisterBitNumberValue>;
 
@@ -55,19 +49,12 @@ private:
       detail::UNSAFE_RegisterField<FieldType,
                                    LsignificantRegisterBitNumberValue>;
 
+public:
   constexpr explicit RegisterField(const FieldType RegisterFieldField)
       : UNSAFE_RegisterFieldType(RegisterFieldField) {}
 
-public:
-  using UNSAFE_RegisterFieldType::getMask;
-
-  template <ValueType RegisterFieldValue>
-  static constexpr RegisterField make() {
-    return RegisterField(FieldType::template make<RegisterFieldValue>());
-  }
-
-  static RegisterField UNSAFE_make(const ValueType RegisterFieldValue) {
-    return RegisterField(FieldType::UNSAFE_make(RegisterFieldValue));
+  constexpr bool operator==(const RegisterField &RhandSide) const {
+    return UNSAFE_RegisterFieldType::operator==(RhandSide);
   }
 };
 

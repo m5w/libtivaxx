@@ -35,6 +35,10 @@ class EnumeratedField
 protected:
   constexpr explicit EnumeratedField(const FieldType FieldField)
       : UNSAFE_FieldType(FieldField) {}
+
+  constexpr bool operator==(const EnumeratedField &RhandSide) const {
+    return UNSAFE_FieldType::operator==(RhandSide);
+  }
 };
 
 } // namespace tiva
